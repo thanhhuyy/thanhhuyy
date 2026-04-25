@@ -9,8 +9,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
 <style>
 :root{--blush:#f5e6e0;--rose:#d4856a;--deep:#3d2b2b;--sage:#7a9e8e;--cream:#fdf8f5;--gold:#c8a96e;--text:#4a3535;--muted:#8a7070;}
+body.theme-sage{--blush:#e4f0eb;--rose:#5f9e8a;--deep:#1e3d30;--sage:#4a7a6a;--cream:#f0f8f4;--gold:#7aaa6a;--text:#2d4a3a;--muted:#6a8a7a;}
+body.theme-blue{--blush:#e6edf8;--rose:#5a7ec8;--deep:#1a2d55;--sage:#7a9aba;--cream:#f0f4fc;--gold:#8a9ace;--text:#2a3d6a;--muted:#6a7a9a;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);line-height:1.7;padding-top:42px;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);line-height:1.7;padding-top:42px;transition:background .3s,color .3s;}
 
 /* SHARE BAR */
 #share-bar{position:fixed;top:0;left:0;right:0;z-index:400;background:rgba(253,248,245,.96);backdrop-filter:blur(8px);border-bottom:1px solid #eeddd6;padding:5px 12px;display:flex;align-items:center;gap:7px;}
@@ -220,6 +222,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 @keyframes sdot{0%,100%{opacity:1}50%{opacity:.2}}
 #sync-id-label{margin-left:auto;opacity:.6;font-size:10px;}
 .sync-change{cursor:pointer;opacity:.7;font-size:10px;text-decoration:underline;white-space:nowrap;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;}
+
+/* ── HERO PERSONALIZATION ── */
+.hero{background:linear-gradient(135deg,var(--blush) 0%,var(--cream) 50%,rgba(122,158,142,.12) 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(212,133,106,.12) 0%,transparent 70%);border-radius:50%;}
+.hero-family{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;min-height:20px;}
+.hero-name-chip{font-size:11px;font-weight:600;color:var(--rose);background:rgba(255,255,255,.7);backdrop-filter:blur(4px);padding:3px 10px;border-radius:14px;border:1px solid rgba(212,133,106,.25);}
+.hero-edit-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);padding:2px 6px;border-radius:6px;transition:all .15s;line-height:1;}
+.hero-edit-btn:hover{color:var(--rose);background:rgba(212,133,106,.1);}
+.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--rose);margin-top:2px;margin-bottom:2px;min-height:18px;}
+
+/* ── PROFILE MODAL EXTRAS ── */
+.modal-input-plain{width:100%;padding:9px 12px;border:1.5px solid #eeddd6;border-radius:9px;font-size:14px;color:var(--deep);font-family:'DM Sans',sans-serif;margin-bottom:4px;}
+.modal-input-plain:focus{outline:none;border-color:var(--rose);}
+.modal-field-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);display:block;margin-top:10px;margin-bottom:3px;}
+.theme-row{display:flex;gap:10px;align-items:center;margin:8px 0 14px;}
+.theme-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .18s;flex-shrink:0;}
+.theme-dot:hover{transform:scale(1.12);}
+.theme-dot.active{border-color:var(--deep);box-shadow:0 0 0 2px white,0 0 0 4px var(--deep);}
+.t-rose{background:linear-gradient(135deg,#d4856a,#f5e6e0);}
+.t-sage{background:linear-gradient(135deg,#5f9e8a,#e4f0eb);}
+.t-blue{background:linear-gradient(135deg,#5a7ec8,#e6edf8);}
+
+/* ── APPROVE WIDGET ── */
+#approve-widget{position:fixed;bottom:52px;left:12px;z-index:350;display:flex;flex-direction:column;gap:5px;max-width:210px;}
+.aw-task{background:rgba(61,43,43,.85);backdrop-filter:blur(8px);color:white;font-size:10.5px;padding:7px 11px;border-radius:10px;display:flex;align-items:center;gap:7px;box-shadow:0 4px 14px rgba(0,0,0,.2);}
+.aw-label{flex:1;line-height:1.4;}
+.aw-btn{background:var(--rose);color:white;border:none;border-radius:7px;padding:4px 9px;font-size:10px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .15s;}
+.aw-btn:hover{background:#c07055;transform:scale(1.04);}
+.aw-done{opacity:.45;font-size:10px;}
+.aw-toggle{background:rgba(61,43,43,.7);border:none;color:white;font-size:10px;padding:3px 8px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;align-self:flex-start;}
 </style>
 </head>
 <body>
@@ -232,6 +264,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   <button class="sb-btn sb-copy" onclick="copyLink()">🔗 Copy link</button>
   <button class="sb-btn sb-share" onclick="shareLink()">📤 Share</button>
   <button class="sb-btn sb-key" onclick="openModal()">⚙️ Đổi mã</button>
+  <button class="sb-btn sb-key" onclick="openProfile()" title="Hồ sơ gia đình">👨‍👩‍👧</button>
 </div>
 <div id="copy-toast">✓ Đã copy link!</div>
 
@@ -252,6 +285,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal" style="display:none" onclick="if(event.target===this)closeProfile()">
+  <div class="modal-box">
+    <div class="modal-icon">👨‍👩‍👧</div>
+    <div class="modal-title">Hồ sơ gia đình</div>
+    <div class="modal-sub">Cá nhân hóa trang theo dõi của bạn</div>
+    <label class="modal-field-lbl">Tên Mẹ</label>
+    <input class="modal-input-plain" id="p-mom" type="text" placeholder="VD: Lan, Hương, Mai...">
+    <label class="modal-field-lbl">Tên Bố</label>
+    <input class="modal-input-plain" id="p-dad" type="text" placeholder="VD: Hùng, Nam, Minh...">
+    <label class="modal-field-lbl">Tên / Biệt danh của Bé</label>
+    <input class="modal-input-plain" id="p-baby" type="text" placeholder="VD: Bơ, Đậu, Su, Mochi...">
+    <label class="modal-field-lbl">Giao diện màu</label>
+    <div class="theme-row">
+      <div class="theme-dot t-rose" title="Hồng (mặc định)" onclick="selectTheme('rose',this)"></div>
+      <div class="theme-dot t-sage" title="Xanh lá" onclick="selectTheme('sage',this)"></div>
+      <div class="theme-dot t-blue" title="Xanh dương" onclick="selectTheme('blue',this)"></div>
+      <span id="theme-label" style="font-size:11px;color:var(--muted);margin-left:4px;">Hồng</span>
+    </div>
+    <button class="modal-btn" onclick="saveProfile()">Lưu hồ sơ ✓</button>
+    <span class="modal-random" onclick="closeProfile()">Đóng</span>
+  </div>
+</div>
+
 <!-- SYNC BAR -->
 <div id="sync-bar">
   <span id="sync-dot"></span>
@@ -261,10 +318,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 </div>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-icon">🌸</div>
-  <h1>Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
-  <div class="hero-meta">
+<div class="hero" style="padding:28px 20px 20px;text-align:center;">
+  <div class="hero-family" id="hero-family"></div>
+  <div class="hero-icon" id="hero-icon">🌸</div>
+  <h1 id="hero-title" style="font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,30px);color:var(--deep);line-height:1.2;margin-bottom:4px;">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
+  <div class="hero-baby-tag" id="hero-baby-tag"></div>
+  <div class="hero-meta" style="font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:6px;">
     <span>📅 Hôm nay: <strong id="today-display"></strong></span>
     <span>🍼 Dự sinh: <strong id="due-display"></strong></span>
     <span>⏳ <strong id="days-left-hero"></strong></span>
@@ -654,6 +713,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 <div class="footer">Thông tin mang tính tham khảo. <strong>Luôn hỏi ý kiến bác sĩ sản phụ khoa</strong> cho tình trạng cá nhân. 🌸</div>
 <button class="fab" onclick="scrollToNow()">📍</button>
 
+<!-- APPROVE WIDGET -->
+<div id="approve-widget">
+  <button class="aw-toggle" onclick="toggleAW()" id="aw-toggle-btn">🛠 Dev tasks ▲</button>
+  <div id="aw-body">
+    <div class="aw-task aw-done">✅ Fix lỗi y tế</div>
+    <div class="aw-task aw-done">✅ Nội dung y tế còn thiếu</div>
+    <div class="aw-task aw-done">✅ Personalization</div>
+    <div class="aw-task">
+      <span class="aw-label">▶ UI redesign: themes, hero, mood tracker</span>
+      <button class="aw-btn" onclick="awApprove()">Approve</button>
+    </div>
+    <div class="aw-task aw-done" style="opacity:.3">⏳ Tab Sức khỏe</div>
+    <div class="aw-task aw-done" style="opacity:.3">⏳ Tab Xét nghiệm</div>
+  </div>
+</div>
+
 <script>
 // ── Firebase ──────────────────────────────────────────────
 firebase.initializeApp({
@@ -670,6 +745,7 @@ const db=firebase.firestore();
 let _sid=null,_week=10,_syncing=false,unsub=null;
 let hideT,saveT;
 const today=new Date();
+let _profile={momName:'',dadName:'',babyNick:'',theme:'rose'};
 
 // ── Sync bar ──────────────────────────────────────────────
 const sbar=document.getElementById('sync-bar');
@@ -694,6 +770,7 @@ function pushData(){
   db.collection('sessions').doc(_sid).set({
     checks,notes,week:_week,
     lmp:document.getElementById('lmpDate').value||'',
+    profile:_profile,
     updatedAt:Date.now()
   }).then(()=>showS('ok','✓ Đã lưu · Mã: '+_sid))
     .catch(e=>showS('err','⚠ Lỗi: '+e.message));
@@ -709,6 +786,7 @@ function applyData(data){
     updateCkBar();
   }
   if(data.notes) document.querySelectorAll('.week-note').forEach(ta=>{const v=data.notes[ta.dataset.week];if(v!==undefined&&v!==ta.value)ta.value=v;});
+  if(data.profile){_profile={..._profile,...data.profile};applyTheme(_profile.theme);updateHero();}
   _syncing=false;
 }
 
@@ -772,6 +850,84 @@ function showToast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2000);
 }
+
+// ── Profile & Theme ───────────────────────────────────────
+let _pendingTheme='rose';
+function openProfile(){
+  const m=document.getElementById('profile-modal');
+  document.getElementById('p-mom').value=_profile.momName||'';
+  document.getElementById('p-dad').value=_profile.dadName||'';
+  document.getElementById('p-baby').value=_profile.babyNick||'';
+  _pendingTheme=_profile.theme||'rose';
+  syncThemeDots(_pendingTheme);
+  m.style.display='flex';
+}
+function closeProfile(){document.getElementById('profile-modal').style.display='none';}
+function saveProfile(){
+  _profile.momName=document.getElementById('p-mom').value.trim();
+  _profile.dadName=document.getElementById('p-dad').value.trim();
+  _profile.babyNick=document.getElementById('p-baby').value.trim();
+  _profile.theme=_pendingTheme;
+  applyTheme(_profile.theme);
+  updateHero();
+  closeProfile();
+  if(!_syncing)scheduleSave();
+}
+function selectTheme(t,el){
+  _pendingTheme=t;
+  syncThemeDots(t);
+  const labels={rose:'Hồng',sage:'Xanh lá',blue:'Xanh dương'};
+  document.getElementById('theme-label').textContent=labels[t]||t;
+}
+function syncThemeDots(t){
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active',d.classList.contains('t-'+t)));
+}
+function applyTheme(t){
+  document.body.classList.remove('theme-sage','theme-blue');
+  if(t==='sage')document.body.classList.add('theme-sage');
+  else if(t==='blue')document.body.classList.add('theme-blue');
+  localStorage.setItem('pg_theme',t);
+}
+function updateHero(){
+  const {momName,dadName,babyNick}=_profile;
+  const fam=document.getElementById('hero-family');
+  const tag=document.getElementById('hero-baby-tag');
+  const title=document.getElementById('hero-title');
+  // Family chips
+  let chips='';
+  if(momName) chips+=`<span class="hero-name-chip">🤰 ${momName}</span>`;
+  if(dadName) chips+=`<span class="hero-name-chip">👨 ${dadName}</span>`;
+  chips+=`<button class="hero-edit-btn" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>`;
+  fam.innerHTML=chips;
+  // Baby tag
+  if(babyNick){
+    tag.textContent=`Đang chờ ${babyNick} chào đời 🍼`;
+    title.innerHTML=`Hành trình của ${momName||'Mẹ'}<br><em>Theo Từng Tuần</em>`;
+  } else {
+    tag.textContent='';
+    title.innerHTML='Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em>';
+  }
+}
+
+// ── Approve widget ────────────────────────────────────────
+let _awOpen=true;
+function toggleAW(){
+  _awOpen=!_awOpen;
+  document.getElementById('aw-body').style.display=_awOpen?'flex':'none';
+  document.getElementById('aw-toggle-btn').textContent=_awOpen?'🛠 Dev tasks ▲':'🛠 Dev tasks ▼';
+}
+function awApprove(){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText('approve').then(()=>showToast('✓ Đã copy "approve" — paste vào Claude!'));
+  } else {
+    const ta=document.createElement('textarea');ta.value='approve';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    showToast('✓ Đã copy "approve" — paste vào Claude!');
+  }
+}
+document.getElementById('aw-body').style.display='flex';
+document.getElementById('aw-body').style.flexDirection='column';
+document.getElementById('aw-body').style.gap='5px';
 
 // ── Modal ─────────────────────────────────────────────────
 function openModal(){document.getElementById('modal').style.display='flex';}
@@ -892,9 +1048,11 @@ document.querySelectorAll('.week-note').forEach(ta=>{
 });
 
 // ── Init ──────────────────────────────────────────────────
+(function(){const t=localStorage.getItem('pg_theme');if(t)applyTheme(t);})();
 document.getElementById('today-display').textContent=fmt(today);
 render();
 updateCkBar();
+updateHero();
 </script>
 </body>
 </html>
