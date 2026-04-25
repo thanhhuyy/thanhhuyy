@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lộ Trình Thai Kỳ 🌸</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
@@ -44,12 +45,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .modal-random{display:block;text-align:center;font-size:12px;color:var(--rose);cursor:pointer;text-decoration:underline;}
 .modal-err{font-size:12px;color:#c0402a;text-align:center;margin-top:8px;min-height:16px;}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,#f5e6e0 0%,#fdf0e8 50%,#e8f0ec 100%);padding:36px 20px 24px;text-align:center;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(212,133,106,.15) 0%,transparent 70%);border-radius:50%;}
-.hero-icon{font-size:38px;margin-bottom:8px;}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,32px);color:var(--deep);line-height:1.2;margin-bottom:6px;}
-.hero-meta{font-size:12.5px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:5px;}
+/* HERO (base — overridden by HERO REDESIGN block below) */
+.hero{background:linear-gradient(135deg,#f5e6e0 0%,#fdf0e8 50%,#e8f0ec 100%);position:relative;overflow:hidden;}
 
 /* LMP BAR */
 .lmp-bar{background:#fff8f5;border-bottom:1px solid #f0e8e4;padding:9px 16px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;}
@@ -259,14 +256,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .tbl-del{background:none;border:none;cursor:pointer;color:#c0a898;font-size:12px;padding:2px 4px;border-radius:4px;}
 .tbl-del:hover{color:var(--rose);}
 
-/* ── HERO PERSONALIZATION ── */
-.hero{background:linear-gradient(135deg,var(--blush) 0%,var(--cream) 50%,rgba(122,158,142,.12) 100%);position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(212,133,106,.12) 0%,transparent 70%);border-radius:50%;}
-.hero-family{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;min-height:20px;}
-.hero-name-chip{font-size:11px;font-weight:600;color:var(--rose);background:rgba(255,255,255,.7);backdrop-filter:blur(4px);padding:3px 10px;border-radius:14px;border:1px solid rgba(212,133,106,.25);}
-.hero-edit-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);padding:2px 6px;border-radius:6px;transition:all .15s;line-height:1;}
-.hero-edit-btn:hover{color:var(--rose);background:rgba(212,133,106,.1);}
-.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:13px;color:var(--rose);margin-top:2px;margin-bottom:2px;min-height:18px;}
+/* ── HERO REDESIGN ── */
+.hero{background:linear-gradient(150deg,var(--blush) 0%,var(--cream) 55%,rgba(122,158,142,.1) 100%);position:relative;overflow:hidden;padding:22px 18px 20px;}
+.hero::before{display:none;}
+.hero-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.hd-fl{position:absolute;font-size:16px;opacity:.35;animation:hd-float 4s ease-in-out infinite;}
+.f1{top:8%;left:4%;animation-delay:0s;font-size:13px;}.f2{top:18%;right:6%;animation-delay:.7s;font-size:11px;}.f3{bottom:32%;left:3%;animation-delay:1.4s;font-size:14px;}.f4{bottom:15%;right:5%;animation-delay:2.1s;font-size:12px;}.f5{top:45%;left:48%;animation-delay:2.8s;font-size:10px;}
+@keyframes hd-float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-7px) rotate(5deg)}}
+.hero-top{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.hero-ring-wrap{position:relative;width:78px;height:78px;flex-shrink:0;}
+.wr-svg{width:78px;height:78px;transform:rotate(-90deg);}
+.wr-bg{fill:none;stroke:rgba(0,0,0,.07);stroke-width:7;}
+.wr-track{fill:none;stroke:var(--rose);stroke-width:7;stroke-linecap:round;stroke-dasharray:213.6;stroke-dashoffset:160;transition:stroke-dashoffset 1s ease;}
+.hero-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hrl-week{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--deep);line-height:1;}
+.hrl-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.6px;margin-top:1px;}
+.hero-text-col{text-align:left;max-width:220px;}
+.hero-text-col h1{font-family:'Playfair Display',serif;font-size:clamp(17px,4vw,24px);color:var(--deep);line-height:1.25;margin-bottom:3px;}
+.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--rose);min-height:15px;margin-bottom:6px;}
+.hero-meta-row{display:flex;gap:5px;flex-wrap:wrap;}
+.hm-chip{font-size:10.5px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.65);color:var(--text);border:1px solid rgba(0,0,0,.06);display:inline-flex;gap:3px;align-items:center;white-space:nowrap;}
+.hm-due{background:var(--rose);color:white;border-color:transparent;}
+.hm-cnt{background:var(--deep);color:white;border-color:transparent;}
+.hero-chibi-row{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap;min-height:44px;}
+.chibi-card{display:flex;flex-direction:column;align-items:center;gap:3px;animation:chibi-pop .45s cubic-bezier(.34,1.56,.64,1) both;}
+.chibi-card:nth-child(2){animation-delay:.08s;}.chibi-card:nth-child(3){animation-delay:.16s;}
+@keyframes chibi-pop{from{opacity:0;transform:scale(.5) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.chibi-av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:white;border:2.5px solid;box-shadow:0 4px 12px rgba(0,0,0,.13);}
+.chibi-av.c-mom{border-color:#f9a8d4;}.chibi-av.c-dad{border-color:#93c5fd;}.chibi-av.c-baby{border-color:#fde68a;}
+.chibi-name{font-size:10px;font-weight:700;color:var(--deep);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chibi-role{font-size:9px;color:var(--muted);}
+.hero-add-btn{background:rgba(255,255,255,.7);border:2px dashed var(--rose);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:16px;color:var(--rose);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;margin-bottom:6px;}
+.hero-add-btn:hover{background:var(--rose);color:white;}
+/* Banner size chip */
+.cb-size{display:inline-block;background:rgba(255,255,255,.2);border-radius:8px;padding:1px 7px;font-size:10.5px;margin-top:3px;}
 
 /* ── PROFILE MODAL EXTRAS ── */
 .modal-input-plain{width:100%;padding:9px 12px;border:1.5px solid #eeddd6;border-radius:9px;font-size:14px;color:var(--deep);font-family:'DM Sans',sans-serif;margin-bottom:4px;}
@@ -346,16 +369,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 </div>
 
 <!-- HERO -->
-<div class="hero" style="padding:28px 20px 20px;text-align:center;">
-  <div class="hero-family" id="hero-family"></div>
-  <div class="hero-icon" id="hero-icon">🌸</div>
-  <h1 id="hero-title" style="font-family:'Playfair Display',serif;font-size:clamp(20px,5vw,30px);color:var(--deep);line-height:1.2;margin-bottom:4px;">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
-  <div class="hero-baby-tag" id="hero-baby-tag"></div>
-  <div class="hero-meta" style="font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:6px;">
-    <span>📅 Hôm nay: <strong id="today-display"></strong></span>
-    <span>🍼 Dự sinh: <strong id="due-display"></strong></span>
-    <span>⏳ <strong id="days-left-hero"></strong></span>
+<div class="hero">
+  <div class="hero-deco" aria-hidden="true">
+    <span class="hd-fl f1">🌸</span><span class="hd-fl f2">💕</span>
+    <span class="hd-fl f3">⭐</span><span class="hd-fl f4">🌼</span><span class="hd-fl f5">✨</span>
   </div>
+  <div class="hero-top">
+    <div class="hero-ring-wrap">
+      <svg class="wr-svg" viewBox="0 0 80 80">
+        <circle class="wr-bg" cx="40" cy="40" r="34"/>
+        <circle class="wr-track" id="wr-fill" cx="40" cy="40" r="34"/>
+      </svg>
+      <div class="hero-ring-label">
+        <span class="hrl-week" id="hero-ring-week">10</span>
+        <span class="hrl-sub">tuần</span>
+      </div>
+    </div>
+    <div class="hero-text-col">
+      <h1 id="hero-title">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
+      <div class="hero-baby-tag" id="hero-baby-tag"></div>
+      <div class="hero-meta-row">
+        <span class="hm-chip">📅 <strong id="today-display"></strong></span>
+        <span class="hm-chip hm-due">🍼 <strong id="due-display"></strong></span>
+        <span class="hm-chip hm-cnt">⏳ <strong id="days-left-hero"></strong></span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-chibi-row" id="hero-family"></div>
 </div>
 
 <!-- LMP -->
@@ -379,6 +419,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
     <div class="cb-info">
       <strong id="banner-title">Quý 1 — Tuần 10</strong>
       <span id="banner-desc">Bé đang hình thành các cơ quan sống còn</span>
+      <span class="cb-size" id="banner-size"></span>
     </div>
   </div>
   <div class="cb-right">
@@ -739,7 +780,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 </div>
 
 
-<div class="section" id="sec-health" style="display:none">
+<div class="section" id="sec-health">
   <div class="section-header"><div class="section-icon" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);font-size:22px">📊</div><div><div class="section-title">Theo dõi Sức khỏe</div><div class="section-sub">Huyết áp · Cân nặng · Thai máy</div></div></div>
 
   <!-- Setup -->
@@ -973,25 +1014,84 @@ function applyTheme(t){
   else if(t==='blue')document.body.classList.add('theme-blue');
   localStorage.setItem('pg_theme',t);
 }
+function chibiSvg(type){
+  if(type==='mom') return `<svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<path d="M12 27 Q12 5 30 5 Q48 5 48 27 Q44 9 30 8 Q16 9 12 27Z" fill="#6d28d9"/>
+<path d="M12 26 Q9 40 11 52 Q13 60 18 62" fill="#6d28d9"/><path d="M48 26 Q51 40 49 52 Q47 60 42 62" fill="#6d28d9"/>
+<circle cx="30" cy="26" r="18" fill="#fddbb4"/>
+<path d="M12 26 Q13 9 30 8 Q47 9 48 26" fill="#6d28d9"/>
+<circle cx="23" cy="24" r="3.2" fill="#1e293b"/><circle cx="37" cy="24" r="3.2" fill="#1e293b"/>
+<circle cx="24.3" cy="22.6" r="1.2" fill="white"/><circle cx="38.3" cy="22.6" r="1.2" fill="white"/>
+<circle cx="18" cy="30" r="5.5" fill="#fb7185" opacity=".28"/><circle cx="42" cy="30" r="5.5" fill="#fb7185" opacity=".28"/>
+<path d="M25 34 Q30 39 35 34" stroke="#6d28d9" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<rect x="24.5" y="42" width="11" height="7" rx="3.5" fill="#fddbb4"/>
+<ellipse cx="30" cy="61" rx="18" ry="14" fill="#f9a8d4"/>
+<ellipse cx="30" cy="67" rx="12" ry="9" fill="#fce7f3"/>
+<ellipse cx="10" cy="57" rx="5" ry="11" fill="#f9a8d4" transform="rotate(-12 10 57)"/>
+<ellipse cx="50" cy="57" rx="5" ry="11" fill="#f9a8d4" transform="rotate(12 50 57)"/>
+</svg>`;
+  if(type==='dad') return `<svg viewBox="0 0 60 76" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<path d="M13 25 Q13 6 30 6 Q47 6 47 25 Q44 10 30 9 Q16 10 13 25Z" fill="#374151"/>
+<circle cx="30" cy="24" r="18" fill="#fcd9a4"/>
+<path d="M13 25 Q14 10 30 9 Q46 10 47 25" fill="#374151"/>
+<circle cx="23" cy="22" r="3.2" fill="#1e293b"/><circle cx="37" cy="22" r="3.2" fill="#1e293b"/>
+<circle cx="24.3" cy="20.6" r="1.2" fill="white"/><circle cx="38.3" cy="20.6" r="1.2" fill="white"/>
+<circle cx="18" cy="27" r="5" fill="#fb7185" opacity=".15"/><circle cx="42" cy="27" r="5" fill="#fb7185" opacity=".15"/>
+<path d="M25 31 Q30 36 35 31" stroke="#374151" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<rect x="24.5" y="40" width="11" height="7" rx="3.5" fill="#fcd9a4"/>
+<ellipse cx="30" cy="58" rx="18" ry="13" fill="#93c5fd"/>
+<ellipse cx="10" cy="54" rx="5" ry="11" fill="#93c5fd" transform="rotate(-12 10 54)"/>
+<ellipse cx="50" cy="54" rx="5" ry="11" fill="#93c5fd" transform="rotate(12 50 54)"/>
+</svg>`;
+  return `<svg viewBox="0 0 50 66" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<ellipse cx="25" cy="6" rx="12" ry="5" fill="#fbbf24"/>
+<path d="M8 23 Q8 4 25 4 Q42 4 42 23" fill="#fde68a"/>
+<circle cx="25" cy="24" r="17" fill="#ffe9c4"/>
+<circle cx="19" cy="23" r="2.8" fill="#1e293b"/><circle cx="31" cy="23" r="2.8" fill="#1e293b"/>
+<circle cx="20" cy="21.6" r="1.1" fill="white"/><circle cx="32" cy="21.6" r="1.1" fill="white"/>
+<circle cx="13" cy="28" r="6.5" fill="#fb7185" opacity=".32"/><circle cx="37" cy="28" r="6.5" fill="#fb7185" opacity=".32"/>
+<path d="M21 31 Q25 36 29 31" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+<ellipse cx="25" cy="52" rx="15" ry="12" fill="#fef9c3"/>
+<circle cx="9" cy="50" r="5" fill="#ffe9c4"/><circle cx="41" cy="50" r="5" fill="#ffe9c4"/>
+</svg>`;
+}
+
+function chibiCard(type,name,role){
+  return `<div class="chibi-card"><div class="chibi-av c-${type}">${chibiSvg(type)}</div><div class="chibi-name">${name}</div><div class="chibi-role">${role}</div></div>`;
+}
+
+function updateRing(w){
+  const el=document.getElementById('wr-fill');
+  const num=document.getElementById('hero-ring-week');
+  if(!el) return;
+  const circ=2*Math.PI*34;
+  el.style.strokeDashoffset=circ*(1-Math.min(1,w/40));
+  if(num) num.textContent=w;
+}
+
 function updateHero(){
   const {momName,dadName,babyNick}=_profile;
-  const fam=document.getElementById('hero-family');
   const tag=document.getElementById('hero-baby-tag');
   const title=document.getElementById('hero-title');
-  // Family chips
-  let chips='';
-  if(momName) chips+=`<span class="hero-name-chip">🤰 ${momName}</span>`;
-  if(dadName) chips+=`<span class="hero-name-chip">👨 ${dadName}</span>`;
-  chips+=`<button class="hero-edit-btn" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>`;
-  fam.innerHTML=chips;
-  // Baby tag
+  const fam=document.getElementById('hero-family');
+  // Title + baby tag
   if(babyNick){
     tag.textContent=`Đang chờ ${babyNick} chào đời 🍼`;
     title.innerHTML=`Hành trình của ${momName||'Mẹ'}<br><em>Theo Từng Tuần</em>`;
+  } else if(momName){
+    tag.textContent='';
+    title.innerHTML=`Hành trình của ${momName}<br><em>Theo Từng Tuần</em>`;
   } else {
     tag.textContent='';
     title.innerHTML='Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em>';
   }
+  // Chibi row
+  let html='';
+  if(momName) html+=chibiCard('mom',momName,'Mẹ');
+  if(dadName)  html+=chibiCard('dad',dadName,'Bố');
+  if(babyNick) html+=chibiCard('baby',babyNick,'Bé yêu');
+  html+=`<button class="hero-add-btn" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>`;
+  fam.innerHTML=html;
 }
 
 
@@ -1018,6 +1118,9 @@ function doConnect(){
   if(sid){document.getElementById('sid-input').value=sid;connectSession(sid);}
 })();
 
+// ── Fetal size by week ────────────────────────────────────
+const SIZE_BY_WEEK={4:'🫘 Hạt vừng',5:'🌱 Hạt mè',6:'🫐 Việt quất',7:'🍓 Mâm xôi',8:'🍓 Dâu tây',9:'🍇 Trái nho',10:'🍋 Quả chanh',11:'🥝 Kiwi nhỏ',12:'🥝 Kiwi',13:'🍋 Chanh vàng',14:'🍑 Quả đào',15:'🍎 Quả táo',16:'🥑 Trái bơ',17:'🍐 Quả lê',18:'🥒 Dưa leo',19:'🥭 Xoài',20:'🍌 Chuối',21:'🥕 Cà rốt',22:'🌽 Bắp ngô',23:'🍆 Cà tím',24:'🥦 Súp lơ',25:'🥬 Bó xà lách',26:'🥬 Bắp cải',27:'🥬 Cải thảo',28:'🌿 Cần tây',29:'🎃 Bí nhỏ',30:'🍉 Dưa hấu nhỏ',31:'🍍 Trái dứa',32:'🥦 Súp lơ lớn',33:'🍍 Thơm',34:'🎃 Bí ngô',35:'🎃 Bí đỏ',36:'🎃 Dưa lưới',37:'🎃 Dưa gang',38:'🎃 Dưa hấu',39:'🎃 Dưa hấu lớn',40:'👶 Bé sơ sinh'};
+
 // ── Date helpers ──────────────────────────────────────────
 function fmt(d){return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'});}
 function getDue(w){const d=new Date(today);d.setDate(d.getDate()+(40-w)*7);return d;}
@@ -1041,6 +1144,8 @@ function render(){
   document.getElementById('banner-desc').textContent=trimDesc(w);
   document.getElementById('banner-date').textContent='Hôm nay: '+fmt(today);
   document.getElementById('countdown-pill').textContent=d>0?'🍼 Còn '+d+' ngày':'🎉 Ngày dự sinh!';
+  const sz=SIZE_BY_WEEK[Math.min(w,40)];if(sz)document.getElementById('banner-size').textContent=sz;
+  updateRing(w);
   document.getElementById('weekNum').value=w;
   document.getElementById('prog-fill').style.width=pct+'%';
   document.getElementById('prog-label').textContent='Tuần '+w+'/40';
@@ -1292,6 +1397,7 @@ document.getElementById('today-display').textContent=fmt(today);
 render();
 updateCkBar();
 updateHero();
+renderBpLog();renderWeightLog();renderKickLog();
 </script>
 </body>
 </html>
