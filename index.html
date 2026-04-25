@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lộ Trình Thai Kỳ 🌸</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+<style>
+:root{--blush:#f5e6e0;--rose:#d4856a;--deep:#3d2b2b;--sage:#7a9e8e;--cream:#fdf8f5;--gold:#c8a96e;--text:#4a3535;--muted:#8a7070;}
+body.theme-sage{--blush:#e4f0eb;--rose:#5f9e8a;--deep:#1e3d30;--sage:#4a7a6a;--cream:#f0f8f4;--gold:#7aaa6a;--text:#2d4a3a;--muted:#6a8a7a;}
+body.theme-blue{--blush:#e6edf8;--rose:#5a7ec8;--deep:#1a2d55;--sage:#7a9aba;--cream:#f0f4fc;--gold:#8a9ace;--text:#2a3d6a;--muted:#6a7a9a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);line-height:1.7;padding-top:42px;transition:background .3s,color .3s;}
+
+/* SHARE BAR */
+#share-bar{position:fixed;top:0;left:0;right:0;z-index:400;background:rgba(253,248,245,.96);backdrop-filter:blur(8px);border-bottom:1px solid #eeddd6;padding:5px 12px;display:flex;align-items:center;gap:7px;}
+.sb-id{font-size:10.5px;font-weight:700;color:var(--rose);background:var(--blush);padding:3px 9px;border-radius:7px;letter-spacing:.8px;cursor:pointer;white-space:nowrap;border:none;font-family:'DM Sans',sans-serif;}
+.sb-id:hover{background:var(--rose);color:white;}
+.sb-spacer{flex:1;}
+.sb-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .15s;}
+.sb-copy{background:var(--blush);color:var(--rose);}
+.sb-copy:hover{background:var(--rose);color:white;}
+.sb-share{background:var(--rose);color:white;}
+.sb-share:hover{background:#c07055;}
+.sb-key{background:transparent;color:var(--muted);font-size:10.5px;padding:3px 7px;}
+.sb-key:hover{color:var(--rose);}
+#copy-toast{position:fixed;top:52px;left:50%;transform:translateX(-50%);background:#3d2b2b;color:white;padding:6px 15px;border-radius:9px;font-size:12px;font-weight:500;z-index:500;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
+#copy-toast.show{opacity:1;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(61,43,43,.72);display:flex;align-items:center;justify-content:center;z-index:600;padding:20px;backdrop-filter:blur(4px);}
+.modal-box{background:white;border-radius:20px;padding:28px 22px;max-width:340px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.modal-icon{font-size:34px;text-align:center;margin-bottom:10px;}
+.modal-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--deep);text-align:center;margin-bottom:5px;}
+.modal-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:18px;line-height:1.6;}
+.modal-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);display:block;margin-bottom:5px;}
+.modal-input{width:100%;padding:10px 13px;border:2px solid #eeddd6;border-radius:10px;font-size:15px;font-weight:700;color:var(--deep);font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;}
+.modal-input:focus{outline:none;border-color:var(--rose);}
+.modal-hint{font-size:11px;color:var(--muted);margin-bottom:14px;}
+.modal-btn{width:100%;padding:12px;background:linear-gradient(135deg,#d4856a,#c07055);color:white;border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;}
+.modal-btn:hover{opacity:.92;}
+.modal-random{display:block;text-align:center;font-size:12px;color:var(--rose);cursor:pointer;text-decoration:underline;}
+.modal-err{font-size:12px;color:#c0402a;text-align:center;margin-top:8px;min-height:16px;}
+
+/* HERO (base — overridden by HERO REDESIGN block below) */
+.hero{background:linear-gradient(135deg,#f5e6e0 0%,#fdf0e8 50%,#e8f0ec 100%);position:relative;overflow:hidden;}
+
+/* LMP BAR */
+.lmp-bar{background:#fff8f5;border-bottom:1px solid #f0e8e4;padding:9px 16px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12.5px;}
+.lmp-bar label{font-weight:600;color:var(--deep);white-space:nowrap;}
+.lmp-bar input[type=date]{border:1.5px solid #e0d0c8;border-radius:8px;padding:4px 9px;font-size:12.5px;color:var(--deep);background:white;font-family:'DM Sans',sans-serif;}
+.lmp-bar input[type=date]:focus{outline:none;border-color:var(--rose);}
+.lmp-or{color:var(--muted);font-size:11.5px;}
+
+/* BANNER */
+.current-banner{background:linear-gradient(135deg,var(--rose),#c07055);color:white;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.cb-left{display:flex;align-items:center;gap:9px;}
+.cb-week-badge{background:rgba(255,255,255,.22);border-radius:9px;padding:4px 12px;font-weight:700;font-size:16px;white-space:nowrap;}
+.cb-info strong{font-size:13px;display:block;}
+.cb-info span{font-size:11px;opacity:.85;}
+.cb-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
+.cb-date{font-size:11px;opacity:.72;white-space:nowrap;}
+.countdown-pill{background:rgba(255,255,255,.18);border-radius:7px;padding:2px 9px;font-size:11px;font-weight:600;white-space:nowrap;}
+
+/* WEEK ADJUSTER */
+.week-adjuster{background:white;border-bottom:1px solid #f0e8e4;padding:8px 16px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+.week-adjuster label{font-weight:500;color:var(--text);}
+.week-input-wrap{display:flex;align-items:center;gap:5px;}
+.week-btn{width:25px;height:25px;border-radius:50%;border:1.5px solid var(--rose);background:white;color:var(--rose);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.week-btn:hover{background:var(--rose);color:white;}
+#weekNum{width:38px;text-align:center;font-size:14px;font-weight:700;color:var(--deep);border:1.5px solid #e0d0c8;border-radius:7px;padding:2px 0;}
+#weekNum:focus{outline:none;border-color:var(--rose);}
+.goto-now-btn{margin-left:auto;padding:3px 11px;border-radius:9px;background:var(--blush);color:var(--rose);border:none;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.goto-now-btn:hover{background:var(--rose);color:white;}
+
+/* NAV */
+.nav-pills{display:flex;gap:6px;padding:9px 15px;overflow-x:auto;scrollbar-width:none;background:white;border-bottom:1px solid #f0e8e4;position:sticky;top:42px;z-index:100;}
+.nav-pills::-webkit-scrollbar{display:none;}
+.pill{flex-shrink:0;padding:4px 11px;border-radius:16px;font-size:11.5px;font-weight:500;cursor:pointer;background:var(--blush);color:var(--rose);border:none;white-space:nowrap;transition:all .2s;}
+.pill:hover,.pill.active{background:var(--rose);color:white;}
+
+.container{max-width:720px;margin:0 auto;padding:0 14px 70px;}
+
+/* PROGRESS */
+.progress-wrap{margin-top:18px;}
+.pb-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px;}
+.pb-track{height:6px;border-radius:8px;background:#eeddd6;overflow:hidden;}
+.pb-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--rose),var(--sage));transition:width .5s ease;}
+.pb-sub{font-size:11px;color:var(--muted);margin-top:3px;text-align:center;}
+
+/* TRIM LABEL */
+.trim-label{font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);padding:4px 11px;background:var(--blush);border-radius:18px;display:inline-block;margin:16px 0 11px;}
+
+/* WEEK BLOCK */
+.week-block{margin-bottom:8px;border-radius:14px;overflow:hidden;border:1.5px solid #eeddd6;background:white;transition:box-shadow .2s;scroll-margin-top:90px;}
+.week-block:hover{box-shadow:0 3px 14px rgba(61,43,43,.08);}
+.week-block.is-current{border:2.5px solid var(--rose);box-shadow:0 0 0 4px rgba(212,133,106,.12),0 4px 20px rgba(212,133,106,.18);}
+.week-block.is-past{opacity:.55;}
+.week-block.is-past .week-header{background:#f8f4f2;}
+.week-header{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer;user-select:none;background:white;transition:background .15s;}
+.week-block.is-current .week-header{background:linear-gradient(135deg,#fdf0ec,#fff8f5);}
+.week-header:hover{background:#fdf6f3;}
+.wh-num{font-size:10px;font-weight:700;color:var(--muted);min-width:52px;flex-shrink:0;}
+.week-block.is-current .wh-num{color:var(--rose);}
+.wh-title{font-weight:600;font-size:13px;color:var(--deep);flex:1;}
+.wh-tags{display:flex;gap:4px;flex-wrap:wrap;flex-shrink:0;}
+.tag{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:6px;white-space:nowrap;}
+.tag-exam{background:#fde8e0;color:#c0553a;}.tag-nutrition{background:#daeee6;color:#3a7a60;}
+.tag-prep{background:#fdf0d8;color:#9a6f1a;}.tag-care{background:#e8e8f8;color:#5050a0;}
+.tag-alert{background:#ffe0e0;color:#b02020;}
+.wh-now{font-size:10px;font-weight:700;color:white;background:var(--rose);border-radius:8px;padding:2px 8px;white-space:nowrap;flex-shrink:0;animation:wpulse 2s infinite;}
+@keyframes wpulse{0%,100%{box-shadow:0 0 0 0 rgba(212,133,106,.5);}50%{box-shadow:0 0 0 5px rgba(212,133,106,0);}}
+.wh-chevron{font-size:10px;color:var(--muted);transition:transform .25s;flex-shrink:0;}
+.week-block.open .wh-chevron{transform:rotate(180deg);}
+.week-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.week-block.open .week-body{max-height:2200px;border-top:1px solid #f0e4de;}
+.week-body-inner{padding:11px 13px 13px;display:flex;flex-direction:column;gap:8px;}
+
+/* NOTE */
+.week-note-wrap{display:flex;flex-direction:column;gap:3px;}
+.week-note-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.week-note{width:100%;border:1.5px solid #eeddd6;border-radius:9px;padding:7px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);resize:none;min-height:52px;background:#fdfaf8;}
+.week-note:focus{outline:none;border-color:var(--rose);background:white;}
+.week-note::placeholder{color:#c0a898;}
+
+/* BABY SIZE */
+.baby-size{background:linear-gradient(135deg,#fdf0ec,#f5f0fa);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:10px;}
+.bs-emoji{font-size:22px;}
+.bs-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.bs-size{font-weight:700;font-size:12px;color:var(--deep);}
+.bs-desc{font-size:11px;color:var(--muted);}
+
+/* INFO CARDS */
+.info-card{border-radius:10px;padding:9px 11px;display:flex;gap:8px;align-items:flex-start;}
+.ic-exam{background:#fff5f2;border-left:3px solid var(--rose);}
+.ic-nutrition{background:#f2faf6;border-left:3px solid var(--sage);}
+.ic-prep{background:#fdf8ee;border-left:3px solid var(--gold);}
+.ic-care{background:#f4f4fc;border-left:3px solid #8888cc;}
+.ic-alert{background:#fff0f0;border-left:3px solid #cc4444;}
+.ic-icon{font-size:15px;margin-top:1px;flex-shrink:0;}
+.ic-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:2px;}
+.ic-title{font-weight:600;font-size:12px;color:var(--deep);margin-bottom:2px;}
+.ic-desc{font-size:11.5px;color:var(--text);line-height:1.6;}
+
+/* SECTION */
+.section{margin-top:28px;scroll-margin-top:90px;}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--blush);}
+.section-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.icon-rose{background:#fde8e0;}.icon-sage{background:#daeee6;}.icon-gold{background:#fdf0d8;}.icon-purple{background:#ece8f8;}
+.section-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--deep);}
+.section-sub{font-size:11px;color:var(--muted);}
+
+/* NUT TABS */
+.trim-tabs{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap;}
+.trim-tab{padding:4px 13px;border-radius:9px;font-size:11.5px;font-weight:500;cursor:pointer;background:var(--blush);color:var(--rose);border:none;transition:all .2s;}
+.trim-tab.active{background:var(--rose);color:white;}
+.trim-nut-panel{display:none;flex-direction:column;gap:7px;}
+.trim-nut-panel.active{display:flex;}
+.nutrient-row{background:white;border-radius:10px;padding:10px 12px;box-shadow:0 1px 4px rgba(61,43,43,.05);}
+.nutrient-name{font-weight:600;font-size:12.5px;color:var(--deep);margin-bottom:2px;}
+.nutrient-food{font-size:11.5px;color:var(--sage);}
+.nutrient-why{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* DO/DON'T */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+@media(max-width:450px){.two-col{grid-template-columns:1fr;}}
+.col-box{background:white;border-radius:11px;padding:11px;box-shadow:0 1px 5px rgba(61,43,43,.05);}
+.col-box h3{font-size:12px;font-weight:600;margin-bottom:8px;}
+.col-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.col-list li{font-size:11.5px;color:var(--text);display:flex;gap:6px;line-height:1.5;}
+.dont-list li::before{content:'✕';color:var(--rose);font-weight:700;flex-shrink:0;}
+.warn-list li::before{content:'⚠';color:#c08040;flex-shrink:0;}
+
+/* SHOULD DO */
+.list-section{display:flex;flex-direction:column;gap:7px;}
+.list-item{background:white;border-radius:11px;padding:9px 11px;display:flex;gap:8px;align-items:flex-start;box-shadow:0 1px 4px rgba(61,43,43,.05);}
+.list-bullet{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;margin-top:1px;}
+.bull-sage{background:#daeee6;}.bull-rose{background:#fde8e0;}.bull-gold{background:#fdf0d8;}
+.list-text{font-size:12px;color:var(--text);line-height:1.6;}
+.list-text strong{color:var(--deep);font-weight:600;}
+
+/* EMERGENCY */
+.emergency-box{background:#fff5f3;border:1.5px solid #f5c0b0;border-radius:11px;padding:12px;margin-top:9px;}
+.emergency-box h3{font-size:12px;font-weight:600;color:#c0402a;margin-bottom:6px;}
+.emergency-box ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.emergency-box li{font-size:11.5px;color:var(--text);display:flex;gap:6px;}
+.emergency-box li::before{content:'🚨';flex-shrink:0;}
+
+/* CHECKLIST */
+.checklist-group{margin-bottom:12px;}
+.checklist-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;padding:2px 9px;background:var(--blush);border-radius:7px;display:inline-block;}
+.checklist{display:flex;flex-direction:column;gap:5px;}
+.check-item{background:white;border-radius:9px;padding:8px 11px;display:flex;align-items:center;gap:9px;box-shadow:0 1px 4px rgba(61,43,43,.05);cursor:pointer;transition:background .15s;}
+.check-item:hover{background:var(--blush);}
+.check-box{width:17px;height:17px;border-radius:4px;border:2px solid var(--rose);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.check-item.checked .check-box{background:var(--rose);border-color:var(--rose);}
+.check-item.checked .check-box::after{content:'✓';color:white;font-size:10px;font-weight:700;}
+.check-item.checked .check-label{text-decoration:line-through;color:var(--muted);}
+.check-label{font-size:12px;color:var(--text);}
+
+/* FOOTER */
+.footer{text-align:center;padding:18px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--blush);}
+.footer strong{color:var(--rose);}
+
+/* FAB */
+.fab{position:fixed;bottom:42px;right:16px;width:40px;height:40px;border-radius:50%;background:var(--rose);color:white;border:none;font-size:17px;cursor:pointer;box-shadow:0 4px 14px rgba(212,133,106,.5);display:flex;align-items:center;justify-content:center;z-index:200;}
+.fab:hover{transform:translateY(-2px);}
+
+/* SYNC BAR */
+#sync-bar{position:fixed;bottom:0;left:0;right:0;background:#3d2b2b;color:white;font-size:11px;font-family:'DM Sans',sans-serif;padding:5px 14px;display:flex;align-items:center;gap:7px;z-index:300;transition:opacity .3s;opacity:0;pointer-events:none;}
+#sync-bar.show{opacity:1;pointer-events:auto;}
+#sync-dot{width:6px;height:6px;border-radius:50%;background:#aaa;flex-shrink:0;}
+#sync-bar.ok #sync-dot{background:#7a9e8e;}
+#sync-bar.saving #sync-dot{background:#c8a96e;animation:sdot .8s infinite;}
+#sync-bar.err #sync-dot{background:#d4856a;}
+@keyframes sdot{0%,100%{opacity:1}50%{opacity:.2}}
+#sync-id-label{margin-left:auto;opacity:.6;font-size:10px;}
+.sync-change{cursor:pointer;opacity:.7;font-size:10px;text-decoration:underline;white-space:nowrap;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;}
+
+/* ── HEALTH SECTION ── */
+.health-setup{background:white;border-radius:12px;padding:12px 14px;margin-bottom:12px;border:1.5px solid #eeddd6;}
+.setup-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;}
+.setup-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.setup-field{display:flex;flex-direction:column;gap:3px;}
+.setup-field label{font-size:10.5px;font-weight:600;color:var(--muted);}
+.setup-field input{border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--deep);width:100px;}
+.setup-field input:focus{outline:none;border-color:var(--rose);}
+.setup-save{padding:7px 14px;background:var(--rose);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;align-self:flex-end;}
+.bmi-badge{font-size:11px;color:var(--muted);padding:5px 9px;background:var(--blush);border-radius:8px;white-space:nowrap;align-self:flex-end;border:1px solid #eeddd6;}
+.hcard{background:white;border-radius:14px;padding:14px;margin-bottom:10px;border:1.5px solid #eeddd6;}
+.hcard-title{font-size:13px;font-weight:700;color:var(--deep);margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.hcard-ref{font-size:11.5px;background:var(--blush);border-radius:9px;padding:8px 11px;margin-bottom:10px;color:var(--text);line-height:1.65;}
+.hcard-ref strong{color:var(--rose);}
+.log-form{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;margin-bottom:10px;}
+.lf-label{font-size:9.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;}
+.lf-date{width:130px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);}
+.lf-date:focus,.lf-num:focus,.lf-note:focus{outline:none;border-color:var(--rose);}
+.lf-num{width:75px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);text-align:center;}
+.lf-num-sm{width:58px;}
+.lf-note{flex:1;min-width:100px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);}
+.lf-add{padding:7px 14px;background:var(--rose);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;align-self:flex-end;}
+.lf-add:hover{opacity:.9;}
+.chart-wrap{margin:4px 0 10px;min-height:20px;}
+.chart-empty{font-size:11px;color:var(--muted);text-align:center;padding:10px 0;}
+.log-tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.log-tbl th{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:left;padding:4px 6px;border-bottom:1.5px solid #eeddd6;}
+.log-tbl td{padding:5px 6px;border-bottom:1px solid #f5eeea;vertical-align:middle;}
+.log-tbl tr:last-child td{border-bottom:none;}
+.log-tbl tr:hover td{background:#fdf8f5;}
+.st-ok{font-size:9.5px;font-weight:700;color:#3a7a60;background:#daeee6;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.st-warn{font-size:9.5px;font-weight:700;color:#9a6f1a;background:#fdf0d8;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.st-alert{font-size:9.5px;font-weight:700;color:#c0402a;background:#fde8e0;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.tbl-del{background:none;border:none;cursor:pointer;color:#c0a898;font-size:12px;padding:2px 4px;border-radius:4px;}
+.tbl-del:hover{color:var(--rose);}
+
+/* ── HERO REDESIGN ── */
+.hero{background:linear-gradient(150deg,var(--blush) 0%,var(--cream) 55%,rgba(122,158,142,.1) 100%);position:relative;overflow:hidden;padding:22px 18px 20px;}
+.hero::before{display:none;}
+.hero-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.hd-fl{position:absolute;font-size:16px;opacity:.35;animation:hd-float 4s ease-in-out infinite;}
+.f1{top:8%;left:4%;animation-delay:0s;font-size:13px;}.f2{top:18%;right:6%;animation-delay:.7s;font-size:11px;}.f3{bottom:32%;left:3%;animation-delay:1.4s;font-size:14px;}.f4{bottom:15%;right:5%;animation-delay:2.1s;font-size:12px;}.f5{top:45%;left:48%;animation-delay:2.8s;font-size:10px;}
+@keyframes hd-float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-7px) rotate(5deg)}}
+/* Hero: single-column centered */
+.hero{text-align:center;}
+.hero-ring-wrap{position:relative;width:78px;height:78px;margin:0 auto 10px;}
+.wr-svg{width:78px;height:78px;transform:rotate(-90deg);}
+.wr-bg{fill:none;stroke:rgba(0,0,0,.07);stroke-width:7;}
+.wr-track{fill:none;stroke:var(--rose);stroke-width:7;stroke-linecap:round;stroke-dasharray:213.6;stroke-dashoffset:160;transition:stroke-dashoffset 1s ease;}
+.hero-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hrl-week{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--deep);line-height:1;}
+.hrl-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.6px;margin-top:1px;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(17px,4vw,24px);color:var(--deep);line-height:1.25;margin-bottom:3px;}
+.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--rose);min-height:15px;margin-bottom:8px;}
+.hero-meta-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+.hm-chip{font-size:10.5px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.65);color:var(--text);border:1px solid rgba(0,0,0,.06);display:inline-flex;gap:3px;align-items:center;white-space:nowrap;}
+.hm-due{background:var(--rose);color:white;border-color:transparent;}
+.hm-cnt{background:var(--deep);color:white;border-color:transparent;}
+/* Chibi family row */
+.hero-chibi-row{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap;}
+.chibi-card{display:flex;flex-direction:column;align-items:center;gap:3px;animation:chibi-pop .45s cubic-bezier(.34,1.56,.64,1) both;}
+.chibi-card:nth-child(2){animation-delay:.08s;}.chibi-card:nth-child(3){animation-delay:.16s;}
+@keyframes chibi-pop{from{opacity:0;transform:scale(.5) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.chibi-av{width:62px;height:62px;border-radius:50%;overflow:hidden;background:white;border:3px solid;box-shadow:0 4px 14px rgba(0,0,0,.15);}
+.chibi-av.c-mom{border-color:#f9a8d4;}.chibi-av.c-dad{border-color:#93c5fd;}.chibi-av.c-baby{border-color:#fde68a;}
+.chibi-name{font-size:10px;font-weight:700;color:var(--deep);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.chibi-role{font-size:9px;color:var(--muted);}
+.chibi-baby .chibi-av{width:48px;height:48px;border-width:2.5px;}
+.chibi-baby{position:relative;top:6px;}
+/* Corner edit button */
+.hero-edit-corner{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.72);border:1.5px solid rgba(212,133,106,.3);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:12px;color:var(--rose);display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(4px);line-height:1;}
+.hero-edit-corner:hover{background:var(--rose);color:white;border-color:transparent;}
+/* Banner size chip */
+.cb-size{display:inline-block;background:rgba(255,255,255,.2);border-radius:8px;padding:1px 7px;font-size:10.5px;margin-top:3px;}
+
+/* ── PROFILE MODAL EXTRAS ── */
+.modal-input-plain{width:100%;padding:9px 12px;border:1.5px solid #eeddd6;border-radius:9px;font-size:14px;color:var(--deep);font-family:'DM Sans',sans-serif;margin-bottom:4px;}
+.modal-input-plain:focus{outline:none;border-color:var(--rose);}
+.modal-field-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);display:block;margin-top:10px;margin-bottom:3px;}
+.theme-row{display:flex;gap:10px;align-items:center;margin:8px 0 14px;}
+.theme-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .18s;flex-shrink:0;}
+.theme-dot:hover{transform:scale(1.12);}
+.theme-dot.active{border-color:var(--deep);box-shadow:0 0 0 2px white,0 0 0 4px var(--deep);}
+.t-rose{background:linear-gradient(135deg,#d4856a,#f5e6e0);}
+.t-sage{background:linear-gradient(135deg,#5f9e8a,#e4f0eb);}
+.t-blue{background:linear-gradient(135deg,#5a7ec8,#e6edf8);}
+
+</style>
+</head>
+<body>
+
+<!-- SHARE BAR -->
+<div id="share-bar">
+  <span style="font-size:10px;color:var(--muted);">🔑</span>
+  <button class="sb-id" id="sb-id-display" onclick="openModal()">—</button>
+  <div class="sb-spacer"></div>
+  <button class="sb-btn sb-copy" onclick="copyLink()">🔗 Copy link</button>
+  <button class="sb-btn sb-share" onclick="shareLink()">📤 Share</button>
+  <button class="sb-btn sb-key" onclick="openModal()">⚙️ Đổi mã</button>
+  <button class="sb-btn sb-key" onclick="openProfile()" title="Hồ sơ gia đình">👨‍👩‍👧</button>
+</div>
+<div id="copy-toast">✓ Đã copy link!</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-icon">🔑</div>
+    <div class="modal-title">Mã đồng bộ của bạn</div>
+    <div class="modal-sub">Nhập cùng mã trên mọi thiết bị để xem và lưu chung một dữ liệu. Chia sẻ mã hoặc link cho người thân.</div>
+    <label class="modal-label">Mã của bạn</label>
+    <input class="modal-input" id="sid-input" type="text" placeholder="VD: MAMBAU2025" maxlength="20"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+      onkeydown="if(event.key==='Enter')doConnect()">
+    <div class="modal-hint">Chỉ chữ và số, không dấu, không cách</div>
+    <button class="modal-btn" onclick="doConnect()">Kết nối →</button>
+    <span class="modal-random" onclick="genID()">✨ Tạo mã ngẫu nhiên</span>
+    <div class="modal-err" id="modal-err"></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal" style="display:none" onclick="if(event.target===this)closeProfile()">
+  <div class="modal-box">
+    <div class="modal-icon">👨‍👩‍👧</div>
+    <div class="modal-title">Hồ sơ gia đình</div>
+    <div class="modal-sub">Cá nhân hóa trang theo dõi của bạn</div>
+    <label class="modal-field-lbl">Tên Mẹ</label>
+    <input class="modal-input-plain" id="p-mom" type="text" placeholder="VD: Lan, Hương, Mai...">
+    <label class="modal-field-lbl">Tên Bố</label>
+    <input class="modal-input-plain" id="p-dad" type="text" placeholder="VD: Hùng, Nam, Minh...">
+    <label class="modal-field-lbl">Tên / Biệt danh của Bé</label>
+    <input class="modal-input-plain" id="p-baby" type="text" placeholder="VD: Bơ, Đậu, Su, Mochi...">
+    <label class="modal-field-lbl">Giao diện màu</label>
+    <div class="theme-row">
+      <div class="theme-dot t-rose" title="Hồng (mặc định)" onclick="selectTheme('rose',this)"></div>
+      <div class="theme-dot t-sage" title="Xanh lá" onclick="selectTheme('sage',this)"></div>
+      <div class="theme-dot t-blue" title="Xanh dương" onclick="selectTheme('blue',this)"></div>
+      <span id="theme-label" style="font-size:11px;color:var(--muted);margin-left:4px;">Hồng</span>
+    </div>
+    <button class="modal-btn" onclick="saveProfile()">Lưu hồ sơ ✓</button>
+    <span class="modal-random" onclick="closeProfile()">Đóng</span>
+  </div>
+</div>
+
+<!-- SYNC BAR -->
+<div id="sync-bar">
+  <span id="sync-dot"></span>
+  <span id="sync-msg">Đang kết nối...</span>
+  <span id="sync-id-label"></span>
+  <button class="sync-change" onclick="openModal()">Đổi mã</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-deco" aria-hidden="true">
+    <span class="hd-fl f1">🌸</span><span class="hd-fl f2">💕</span>
+    <span class="hd-fl f3">⭐</span><span class="hd-fl f4">🌼</span><span class="hd-fl f5">✨</span>
+  </div>
+  <button class="hero-edit-corner" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>
+  <div class="hero-ring-wrap">
+    <svg class="wr-svg" viewBox="0 0 80 80">
+      <circle class="wr-bg" cx="40" cy="40" r="34"/>
+      <circle class="wr-track" id="wr-fill" cx="40" cy="40" r="34"/>
+    </svg>
+    <div class="hero-ring-label">
+      <span class="hrl-week" id="hero-ring-week">10</span>
+      <span class="hrl-sub">tuần</span>
+    </div>
+  </div>
+  <h1 id="hero-title">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
+  <div class="hero-baby-tag" id="hero-baby-tag"></div>
+  <div class="hero-meta-row">
+    <span class="hm-chip">📅 <strong id="today-display"></strong></span>
+    <span class="hm-chip hm-due">🍼 <strong id="due-display"></strong></span>
+    <span class="hm-chip hm-cnt">⏳ <strong id="days-left-hero"></strong></span>
+  </div>
+  <div class="hero-chibi-row" id="hero-family"></div>
+</div>
+
+<!-- LMP -->
+<div class="lmp-bar">
+  <label>📆 Ngày kinh cuối:</label>
+  <input type="date" id="lmpDate" onchange="onLmpChange()">
+  <span class="lmp-or">hoặc nhập tuần:</span>
+  <div class="week-input-wrap">
+    <button class="week-btn" onclick="adjustWeek(-1)">−</button>
+    <input type="number" id="weekNum" value="10" min="1" max="42" onchange="onWeekInput(+this.value)">
+    <button class="week-btn" onclick="adjustWeek(1)">+</button>
+    <span style="font-size:11.5px;color:var(--muted);">tuần</span>
+  </div>
+  <button class="goto-now-btn" onclick="scrollToNow()">📍 Tuần hiện tại</button>
+</div>
+
+<!-- BANNER -->
+<div class="current-banner">
+  <div class="cb-left">
+    <div class="cb-week-badge" id="banner-week">Tuần 10</div>
+    <div class="cb-info">
+      <strong id="banner-title">Quý 1 — Tuần 10</strong>
+      <span id="banner-desc">Bé đang hình thành các cơ quan sống còn</span>
+      <span class="cb-size" id="banner-size"></span>
+    </div>
+  </div>
+  <div class="cb-right">
+    <div class="cb-date" id="banner-date"></div>
+    <div class="countdown-pill" id="countdown-pill"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-pills">
+  <span class="pill active" onclick="navTo('sec-tuan',this)">🗓 Theo tuần</span>
+  <span class="pill" onclick="navTo('sec-nutrition',this)">🥗 Dinh dưỡng</span>
+  <span class="pill" onclick="navTo('sec-avoid',this)">⚠️ Kiêng cữ</span>
+  <span class="pill" onclick="navTo('sec-todo',this)">💚 Nên làm</span>
+  <span class="pill" onclick="navTo('sec-check',this)">✅ Checklist</span>
+  <span class="pill" onclick="navTo('sec-health',this)">📊 Sức khỏe</span>
+</div>
+
+<div class="container">
+
+<div class="progress-wrap">
+  <div class="pb-labels"><span>Tuần 1</span><span id="prog-label">Tuần 10/40</span><span>Tuần 40</span></div>
+  <div class="pb-track"><div class="pb-fill" id="prog-fill" style="width:25%"></div></div>
+  <div class="pb-sub" id="prog-sub"></div>
+</div>
+
+<!-- ========== THEO TUẦN ========== -->
+<div id="sec-tuan">
+<div class="trim-label">🌱 Quý 1 — Tuần 1 đến 12</div>
+
+<div class="week-block" data-s="1" data-e="4">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 1–4</div><div class="wh-title">Phát hiện & xác nhận thai</div>
+    <div class="wh-tags"><span class="tag tag-exam">Xét nghiệm</span><span class="tag tag-nutrition">Folic</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🫘</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 4: ~1mm · Hạt vừng</div><div class="bs-desc">Phôi thai đang làm tổ trong tử cung</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🧪</div><div><div class="ic-label">Xét nghiệm</div><div class="ic-title">Test thai & xét nghiệm β-hCG</div><div class="ic-desc">Que thử dương tính → đặt lịch khám sớm để xác nhận và tính tuổi thai chính xác.</div></div></div>
+    <div class="info-card ic-nutrition"><div class="ic-icon">💊</div><div><div class="ic-label">Quan trọng nhất — bắt đầu ngay</div><div class="ic-title">Axit Folic 400–600mcg/ngày + Vitamin bầu</div><div class="ic-desc">Ngăn dị tật ống thần kinh — hiệu quả nhất 4 tuần đầu. Lý tưởng uống trước khi có thai.</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">💉</div><div><div class="ic-label">Vaccine — tiêm sớm nhất có thể</div><div class="ic-title">Vaccine cúm an toàn từ quý 1</div><div class="ic-desc">Không cần chờ quý 2. Phụ nữ mang thai nguy cơ biến chứng cúm cao hơn.</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🦠</div><div><div class="ic-label">Vaccine COVID-19 (WHO/CDC khuyến cáo)</div><div class="ic-title">An toàn ở mọi giai đoạn thai kỳ — không cần trì hoãn</div><div class="ic-desc">mRNA vaccine (Pfizer, Moderna) được khuyến nghị mạnh. Bảo vệ mẹ khỏi COVID nặng và truyền kháng thể cho bé.</div></div></div>
+    <div class="info-card ic-prep"><div class="ic-icon">🏥</div><div><div class="ic-label">Chuẩn bị</div><div class="ic-title">Chọn bệnh viện & bác sĩ theo dõi thai</div><div class="ic-desc">Tránh tự ý dùng thuốc, X-quang, tiếp xúc hóa chất.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w1-4" placeholder="Triệu chứng, cảm xúc, câu hỏi cần hỏi bác sĩ..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="5" data-e="8">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 5–8</div><div class="wh-title">Khám thai lần đầu — Tim thai</div>
+    <div class="wh-tags"><span class="tag tag-exam">Khám quan trọng</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🫐</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 8: ~1.6cm · Quả việt quất</div><div class="bs-desc">Tim đã đập, tay chân bắt đầu hình thành</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🔬</div><div><div class="ic-label">Khám lần 1</div><div class="ic-title">Siêu âm xác nhận tim thai, số phôi</div><div class="ic-desc">Loại trừ thai ngoài tử cung. Xét nghiệm: nhóm máu, HIV, viêm gan B, Rubella, giang mai, nước tiểu, đường huyết.</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🩺</div><div><div class="ic-label">Theo dõi từ đầu</div><div class="ic-title">Đo huyết áp mỗi lần khám — ghi lại chỉ số</div><div class="ic-desc">Huyết áp ≥140/90 kèm phù/đau đầu → dấu hiệu tiền sản giật.</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">😷</div><div><div class="ic-label">Triệu chứng</div><div class="ic-title">Ốm nghén · Mệt mỏi · Ngực căng</div><div class="ic-desc">Ăn nhiều bữa nhỏ, tránh mùi mạnh. Nôn liên tục không giữ được nước → báo bác sĩ ngay.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w5-8" placeholder="Huyết áp, cân nặng, triệu chứng..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="9" data-e="10">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 9–10</div><div class="wh-title">Theo dõi · Chuẩn bị sàng lọc quý 1</div>
+    <div class="wh-tags"><span class="tag tag-prep">Chuẩn bị</span><span class="tag tag-nutrition">Magie</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🍇</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 10: ~3.1cm · Quả nho</div><div class="bs-desc">Đủ 10 ngón tay, não phát triển rất nhanh</div></div></div>
+    <div class="info-card ic-prep"><div class="ic-icon">📋</div><div><div class="ic-label">Việc cần làm ngay</div><div class="ic-title">Đặt lịch Double Test — window tuần 11–13w6d</div><div class="ic-desc">Liên hệ bệnh viện đặt trước vì thường kín chỗ. Cửa sổ thời gian hẹp, không thể hoãn.</div></div></div>
+    <div class="info-card ic-nutrition"><div class="ic-icon">💊</div><div><div class="ic-label">Dinh dưỡng</div><div class="ic-title">Bổ sung Magie 300–350mg/ngày</div><div class="ic-desc">Magie glycinate/citrate trước ngủ. Giảm chuột rút, cải thiện giấc ngủ, hỗ trợ xương bé.</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">💆</div><div><div class="ic-label">Chăm sóc</div><div class="ic-title">Nghỉ ngơi đủ, tránh stress kéo dài</div><div class="ic-desc">Cơ thể đang dùng nhiều năng lượng cho nhau thai. Ngủ trưa ngắn nếu mệt.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w9-10" placeholder="Cân nặng, lịch hẹn, cảm giác..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="11" data-e="13">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 11–13</div><div class="wh-title">Sàng lọc quý 1 — Double Test & NT</div>
+    <div class="wh-tags"><span class="tag tag-exam">Bắt buộc</span><span class="tag tag-alert">Cửa sổ hẹp</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🍋</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 13: ~7.4cm · Quả chanh</div><div class="bs-desc">Bé mút ngón tay, cử động nhiều hơn</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🧬</div><div><div class="ic-label">Quan trọng nhất quý 1</div><div class="ic-title">Double Test + Siêu âm đo độ mờ da gáy (NT)</div><div class="ic-desc">Máu (PAPP-A, β-hCG) + siêu âm NT. Tầm soát Down, Edwards, Patau. Nguy cơ cao → NIPT hoặc chọc ối.</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🔬</div><div><div class="ic-label">Tùy chọn nâng cao</div><div class="ic-title">NIPT — ADN tự do từ máu mẹ, chính xác >99%</div><div class="ic-desc">Không xâm lấn. Khuyến nghị cho mẹ ≥35 tuổi hoặc nguy cơ cao từ Double Test.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w11-13" placeholder="Kết quả xét nghiệm, câu hỏi..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="trim-label" style="margin-top:18px;">🌿 Quý 2 — Tuần 13 đến 27</div>
+
+<div class="week-block" data-s="14" data-e="16">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 14–16</div><div class="wh-title">Triple Test · Giai đoạn dễ chịu hơn</div>
+    <div class="wh-tags"><span class="tag tag-exam">Triple Test</span><span class="tag tag-care">Chăm sóc da</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🍐</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 16: ~11.6cm · Quả lê</div><div class="bs-desc">Ốm nghén thường giảm, bé bắt đầu nghe</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🧪</div><div><div class="ic-label">Xét nghiệm tuần 15–20 (tối ưu 16–18)</div><div class="ic-title">Triple Test — AFP, hCG, Estriol · hoặc Quad Test (chính xác hơn)</div><div class="ic-desc">Sàng lọc dị tật ống thần kinh và hội chứng Down. Quad Test bổ sung Inhibin A, độ nhạy ~80% vs 70% của Triple. Kết hợp Double Test để đánh giá tổng thể.</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">🧴</div><div><div class="ic-label">Chăm sóc da</div><div class="ic-title">Bắt đầu thoa kem/dầu chống rạn từ tuần 14</div><div class="ic-desc">Dầu dừa, vitamin E, kem chống rạn — thoa đều bụng, ngực, đùi mỗi ngày.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w14-16" placeholder="Kết quả Triple Test..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="17" data-e="19">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 17–19</div><div class="wh-title">Bé bắt đầu đạp · Thai giáo</div>
+    <div class="wh-tags"><span class="tag tag-care">Thai giáo</span><span class="tag tag-nutrition">Magie</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🥭</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 19: ~15cm · Quả xoài</div><div class="bs-desc">Bé nghe được âm thanh rõ từ bên ngoài</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">🎵</div><div><div class="ic-label">Thai giáo bắt đầu</div><div class="ic-title">Nói chuyện, đọc truyện, nghe nhạc với bé mỗi ngày</div><div class="ic-desc">Từ tuần 18 bé nghe được. Âm nhạc nhịp chậm 60–80 BPM lý tưởng.</div></div></div>
+    <div class="info-card ic-nutrition"><div class="ic-icon">💊</div><div><div class="ic-label">Bổ sung</div><div class="ic-title">Magie giảm chuột rút chân ban đêm</div><div class="ic-desc">300–350mg/ngày dạng glycinate hoặc citrate. Uống buổi tối trước ngủ.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w17-19" placeholder="Lần đầu cảm nhận bé đạp..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="20" data-e="22">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 20–22</div><div class="wh-title">Siêu âm hình thái toàn bộ cơ quan</div>
+    <div class="wh-tags"><span class="tag tag-exam">Quan trọng nhất</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🌽</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 22: ~27cm · Bắp ngô</div><div class="bs-desc">Có lông mi, lông mày, vân tay riêng</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🫀</div><div><div class="ic-label">Siêu âm quan trọng nhất thai kỳ</div><div class="ic-title">Siêu âm 4D hình thái: tim, não, cột sống, mặt, tứ chi</div><div class="ic-desc">Phát hiện hầu hết dị tật bẩm sinh. Có thể biết giới tính.</div></div></div>
+    <div class="info-card ic-prep"><div class="ic-icon">📚</div><div><div class="ic-label">Chuẩn bị</div><div class="ic-title">Đăng ký lớp tiền sản</div><div class="ic-desc">Học thở, rặn đẻ, chăm sóc sơ sinh, nuôi con bằng sữa mẹ. Nhiều bệnh viện có lớp miễn phí.</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">📏</div><div><div class="ic-label">Tầm soát sinh non — nếu có yếu tố nguy cơ</div><div class="ic-title">Đo chiều dài cổ tử cung qua siêu âm (tuần 18–24)</div><div class="ic-desc">CL &lt;25mm → nguy cơ sinh non cao. Chỉ định cho mẹ có tiền sử sinh non, đa thai, hoặc thủ thuật cổ tử cung trước đây.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w20-22" placeholder="Kết quả siêu âm, giới tính bé..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="23" data-e="27">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 23–27</div><div class="wh-title">Tiêm vaccine · Theo dõi tăng trưởng</div>
+    <div class="wh-tags"><span class="tag tag-exam">Tiêm phòng</span><span class="tag tag-prep">Phòng bé</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🥦</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 27: ~34cm · ~900g</div><div class="bs-desc">Mở mắt được, ngủ theo chu kỳ nhất định</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">💉</div><div><div class="ic-label">Vaccine</div><div class="ic-title">Tdap — bạch hầu, uốn ván, ho gà (tuần 27–36)</div><div class="ic-desc">Tốt nhất tiêm tuần 27–32. Kháng thể truyền sang bé bảo vệ những tháng đầu đời.</div></div></div>
+    <div class="info-card ic-prep"><div class="ic-icon">🛏</div><div><div class="ic-label">Chuẩn bị</div><div class="ic-title">Lên kế hoạch phòng bé, đặt mua đồ sớm</div><div class="ic-desc">Nôi, xe đẩy, ghế ô tô (cần lắp trước khi xuất viện), máy hút sữa.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w23-27" placeholder="Danh sách đồ cần mua, lịch tiêm..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="trim-label" style="margin-top:18px;">🌸 Quý 3 — Tuần 28 đến 40+</div>
+
+<div class="week-block" data-s="28" data-e="28">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 28</div><div class="wh-title">Xét nghiệm tiểu đường thai kỳ (OGTT)</div>
+    <div class="wh-tags"><span class="tag tag-exam">Bắt buộc</span><span class="tag tag-alert">Nhịn ăn 8h</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🍆</div><div><div class="bs-label">Kích thước</div><div class="bs-size">~37cm · ~1.0kg · Quả cà tím</div><div class="bs-desc">Mắt phân biệt sáng tối, bé đạp rõ hơn</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🍬</div><div><div class="ic-label">Xét nghiệm tiểu đường</div><div class="ic-title">OGTT — Uống 75g glucose, đo máu sau 1h và 2h</div><div class="ic-desc">Nhịn ăn 8 giờ trước. Dương tính → kiểm soát đường huyết bằng chế độ ăn và theo dõi chặt.</div></div></div>
+    <div class="info-card ic-care"><div class="ic-icon">🔢</div><div><div class="ic-label">Bắt đầu từ tuần này</div><div class="ic-title">Đếm cử động thai: ≥10 lần / 2 giờ mỗi ngày</div><div class="ic-desc">Chọn khung giờ cố định sau ăn. Ghi chép lại. Ít hơn → liên hệ bác sĩ ngay.</div></div></div>
+    <div class="info-card ic-alert"><div class="ic-icon">🩸</div><div><div class="ic-label">Nhóm máu Rh âm — tiêm Anti-D tuần 28</div><div class="ic-title">Mẹ Rh(−): tiêm Anti-D immunoglobulin 300mcg tại tuần 28</div><div class="ic-desc">Nếu bố Rh(+) hoặc chưa biết nhóm máu bố → bắt buộc tiêm để ngăn bất đồng nhóm máu Rh ảnh hưởng thai sau. Tiêm thêm sau sinh nếu bé Rh(+).</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w28" placeholder="Kết quả đường huyết, số lần đạp..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="29" data-e="35">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 29–35</div><div class="wh-title">Siêu âm tăng trưởng · Xét nghiệm GBS</div>
+    <div class="wh-tags"><span class="tag tag-exam">Siêu âm</span><span class="tag tag-prep">Chuẩn bị sinh</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🎃</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 35: ~46cm · ~2.4kg</div><div class="bs-desc">Phổi gần hoàn thiện, bé thường lộn đầu xuống</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">📊</div><div><div class="ic-label">Siêu âm tuần 32–34</div><div class="ic-title">Kiểm tra ngôi thai, nước ối, nhau thai</div><div class="ic-desc">Xác định đầu hay ngôi mông. Lên kế hoạch sinh thường hay mổ.</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🦠</div><div><div class="ic-label">Xét nghiệm GBS — tuần 35–37</div><div class="ic-title">Sàng lọc liên cầu khuẩn nhóm B (Strep B)</div><div class="ic-desc">Dương tính → dùng kháng sinh IV khi chuyển dạ để bảo vệ bé.</div></div></div>
+    <div class="info-card ic-prep"><div class="ic-icon">🎒</div><div><div class="ic-label">Chuẩn bị sinh</div><div class="ic-title">Soạn túi đồ vào viện từ tuần 34–36</div><div class="ic-desc">Hồ sơ · BHYT · CMND · đồ mẹ · đồ sơ sinh · vệ sinh · sạc điện thoại · đồ ăn nhẹ.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w29-35" placeholder="Ngôi thai, cân nặng bé, kế hoạch sinh..."></textarea></div>
+  </div></div>
+</div>
+
+<div class="week-block" data-s="36" data-e="42">
+  <div class="week-header" onclick="toggleBlock(this.parentElement)">
+    <div class="wh-num">Tuần 36–40+</div><div class="wh-title">Khám hàng tuần · Chờ ngày sinh</div>
+    <div class="wh-tags"><span class="tag tag-exam">Hàng tuần</span><span class="tag tag-alert">Sẵn sàng</span></div>
+    <div class="wh-chevron">▼</div>
+  </div>
+  <div class="week-body"><div class="week-body-inner">
+    <div class="baby-size"><div class="bs-emoji">🍉</div><div><div class="bs-label">Kích thước</div><div class="bs-size">Tuần 40: ~51cm · ~3.4kg</div><div class="bs-desc">Sẵn sàng chào đời! Phổi và não hoàn thiện</div></div></div>
+    <div class="info-card ic-exam"><div class="ic-icon">🩺</div><div><div class="ic-label">Khám hàng tuần</div><div class="ic-title">Tim thai, cổ tử cung, cử động, huyết áp</div><div class="ic-desc">Monitor tim thai (NST) từ tuần 36. Đo huyết áp và protein niệu theo dõi tiền sản giật.</div></div></div>
+    <div class="info-card ic-alert"><div class="ic-icon">🚨</div><div><div class="ic-label">Dấu hiệu chuyển dạ — Vào viện ngay</div><div class="ic-title">Vỡ ối · Đau bụng cơn đều 5 phút/lần · Ra máu đỏ</div><div class="ic-desc">Không chờ đợi. Gọi người nhà và vào viện ngay.</div></div></div>
+    <div class="week-note-wrap"><div class="week-note-lbl">📝 Ghi chú</div><textarea class="week-note" data-week="w36-42" placeholder="Kế hoạch sinh, số điện thoại cần thiết..."></textarea></div>
+  </div></div>
+</div>
+</div>
+
+<!-- ========== DINH DƯỠNG ========== -->
+<div class="section" id="sec-nutrition">
+  <div class="section-header"><div class="section-icon icon-sage">🥗</div><div><div class="section-title">Dinh Dưỡng Thai Kỳ</div><div class="section-sub">Nhu cầu thay đổi theo từng quý</div></div></div>
+  <div class="trim-tabs">
+    <button class="trim-tab active" onclick="switchNut(1,this)">🌱 Quý 1</button>
+    <button class="trim-tab" onclick="switchNut(2,this)">🌿 Quý 2</button>
+    <button class="trim-tab" onclick="switchNut(3,this)">🌸 Quý 3</button>
+    <button class="trim-tab" onclick="switchNut(0,this)">📋 Tổng quát</button>
+  </div>
+  <div class="trim-nut-panel active" id="nut-1">
+    <div class="nutrient-row"><div class="nutrient-name">💊 Axit Folic — ưu tiên số 1 (400–600mcg)</div><div class="nutrient-food">Rau xanh đậm, đậu lăng, bổ sung viên mỗi ngày</div><div class="nutrient-why">Hình thành ống thần kinh hoàn tất tuần 4–6. Quan trọng nhất quý 1.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🩸 Sắt (27mg/ngày)</div><div class="nutrient-food">Thịt đỏ, gan tối đa 1 lần/tuần, đậu — uống kèm vitamin C</div><div class="nutrient-why">Thể tích máu tăng 50% trong thai kỳ. Uống xa bữa ăn và sữa 1–2 giờ.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🌊 Magie (300–350mg/ngày)</div><div class="nutrient-food">Hạt bí, hạt chia, rau xanh đậm, dark chocolate, chuối</div><div class="nutrient-why">Giảm chuột rút, hỗ trợ giấc ngủ, phát triển xương bé từ sớm.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">💧 Nước (8–9 ly/ngày)</div><div class="nutrient-food">Nước lọc, nước dừa, gừng pha ấm giảm ốm nghén</div><div class="nutrient-why">Tránh táo bón, nhiễm trùng tiểu — hay gặp quý 1.</div></div>
+    <div style="padding:10px 12px;background:#fff8ee;border-radius:9px;font-size:11.5px;color:var(--text);">⚡ <strong>Quý 1 chỉ thêm ~100kcal/ngày.</strong> Ốm nghén nhiều → ăn bánh mặn, gừng, chia nhỏ bữa cả ngày.</div>
+  </div>
+  <div class="trim-nut-panel" id="nut-2">
+    <div class="nutrient-row"><div class="nutrient-name">🐟 DHA / Omega-3 (200mg/ngày)</div><div class="nutrient-food">Cá hồi, cá thu, cá mòi, hạt chia, óc chó — cá ít thủy ngân</div><div class="nutrient-why">Não bé phát triển mạnh nhất quý 2.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🦴 Canxi (1000mg/ngày)</div><div class="nutrient-food">Sữa bầu, phô mai, sữa chua, đậu phụ, cải xanh</div><div class="nutrient-why">Xương và răng bé hình thành nhanh. Thiếu → mẹ mất canxi xương.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">☀️ Vitamin D (600–800 IU)</div><div class="nutrient-food">Cá béo, lòng đỏ trứng, sữa tăng cường, nắng sớm 15 phút</div><div class="nutrient-why">Hấp thu canxi. Thiếu → tăng nguy cơ tiền sản giật.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🥩 Protein (+25g/ngày)</div><div class="nutrient-food">Thịt gà, cá, trứng, đậu, sữa, đậu phụ</div><div class="nutrient-why">Xây dựng tế bào cho bé và nhau thai. Quý 2 bé tăng cân nhanh nhất.</div></div>
+    <div style="padding:10px 12px;background:#f2faf6;border-radius:9px;font-size:11.5px;color:var(--text);">⚡ <strong>Quý 2 thêm ~350kcal/ngày.</strong> Ốm nghén qua rồi — tận dụng giai đoạn này bổ sung đầy đủ.</div>
+  </div>
+  <div class="trim-nut-panel" id="nut-3">
+    <div class="nutrient-row"><div class="nutrient-name">🫐 I-ốt (220mcg/ngày)</div><div class="nutrient-food">Muối i-ốt, hải sản, sữa, rong biển vừa phải</div><div class="nutrient-why">Phát triển não và tuyến giáp bé. Thiếu → ảnh hưởng IQ lâu dài.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🌊 Magie — tăng liều (350mg)</div><div class="nutrient-food">Chuột rút chân tăng nhiều quý 3 — magie + canxi + D3 buổi tối</div><div class="nutrient-why">Chuột rút ban đêm rất phổ biến. Magie glycinate hấp thu tốt nhất.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🥦 Chất xơ (28g/ngày)</div><div class="nutrient-food">Rau xanh, trái cây, yến mạch, đậu — uống nhiều nước kèm</div><div class="nutrient-why">Táo bón và trĩ rất hay gặp quý 3 do áp lực bụng.</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🩸 Sắt — tiếp tục bổ sung</div><div class="nutrient-food">Bé tích trữ sắt cho 6 tháng đầu đời trong quý 3</div><div class="nutrient-why">Mẹ dễ thiếu máu nhất quý 3. Kiểm tra hemoglobin mỗi lần khám.</div></div>
+    <div style="padding:10px 12px;background:#fdf0ec;border-radius:9px;font-size:11.5px;color:var(--text);">⚡ <strong>Quý 3 thêm ~450kcal/ngày.</strong> Bụng to ép dạ dày → ăn 5–6 bữa nhỏ. Tránh nằm ngay sau ăn.</div>
+  </div>
+  <div class="trim-nut-panel" id="nut-0">
+    <div class="nutrient-row"><div class="nutrient-name">💊 Axit Folic (400–600mcg)</div><div class="nutrient-food">Rau xanh đậm, đậu lăng, bổ sung viên — cả thai kỳ</div><div class="nutrient-why">Quan trọng nhất quý 1, tiếp tục suốt thai kỳ hỗ trợ não bé</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🩸 Sắt (27mg/ngày)</div><div class="nutrient-food">Thịt đỏ, gan, đậu — kèm vitamin C, không uống cùng canxi</div><div class="nutrient-why">Ngừa thiếu máu, đảm bảo oxy đến bé suốt thai kỳ</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🦴 Canxi (1000mg/ngày)</div><div class="nutrient-food">Sữa, phô mai, sữa chua, đậu phụ, cải xanh</div><div class="nutrient-why">Xương răng bé — thiếu mẹ mất xương, chuột rút tăng</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🐟 DHA (200mg/ngày)</div><div class="nutrient-food">Cá hồi, cá thu, hạt chia, óc chó</div><div class="nutrient-why">Não và mắt bé — quan trọng từ quý 2 trở đi</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">🌊 Magie (300–350mg)</div><div class="nutrient-food">Hạt bí, chuối, rau xanh đậm, dark chocolate</div><div class="nutrient-why">Giảm chuột rút, cải thiện giấc ngủ, hỗ trợ xương bé</div></div>
+    <div class="nutrient-row"><div class="nutrient-name">💧 Nước (8–10 ly/ngày)</div><div class="nutrient-food">Nước lọc, nước dừa, nước trái cây tươi không đường</div><div class="nutrient-why">Tránh táo bón, nhiễm trùng tiểu, phù nề</div></div>
+  </div>
+  <div style="margin-top:10px;padding:11px 13px;background:#daeee6;border-radius:10px;">
+    <div style="font-weight:600;color:#3a7a60;font-size:12.5px;margin-bottom:5px;">📏 Tăng cân theo BMI</div>
+    <div style="font-size:11.5px;color:var(--text);line-height:1.9;">BMI bình thường: <strong>+11–16 kg</strong> &nbsp;·&nbsp; BMI thấp: <strong>+12–18 kg</strong><br>Thừa cân: <strong>+7–11 kg</strong> &nbsp;·&nbsp; Béo phì: <strong>+5–9 kg</strong> &nbsp;·&nbsp; Thai đôi: <strong>+3–5 kg thêm</strong></div>
+  </div>
+</div>
+
+<!-- ========== KIÊNG CỮ ========== -->
+<div class="section" id="sec-avoid">
+  <div class="section-header"><div class="section-icon icon-rose">⚠️</div><div><div class="section-title">Kiêng Cữ & Cẩn Thận</div><div class="section-sub">Bảo vệ mẹ và bé suốt thai kỳ</div></div></div>
+  <div class="two-col">
+    <div class="col-box"><h3 style="color:var(--rose);">🚫 Tuyệt đối tránh</h3>
+      <ul class="col-list dont-list">
+        <li>Rượu bia, thuốc lá (cả khói thụ động)</li>
+        <li>Cá thủy ngân cao: cá kiếm, cá ngừ đại dương</li>
+        <li>Thịt sống: sushi, nem sống, gỏi</li>
+        <li>Phô mai mềm chưa tiệt trùng</li>
+        <li>Thuốc không kê đơn tùy tiện</li>
+        <li>X-quang không cần thiết</li>
+        <li>Hóa chất độc, sơn, thuốc trừ sâu</li>
+        <li>Caffeine >200mg/ngày (~2 ly cà phê)</li>
+        <li>Gan >1 lần/tuần (thừa vitamin A)</li>
+      </ul>
+    </div>
+    <div class="col-box"><h3 style="color:#b06020;">⚡ Hạn chế, cẩn thận</h3>
+      <ul class="col-list warn-list">
+        <li>Tắm nước nóng >38°C</li>
+        <li>Vận động mạnh, nguy cơ ngã</li>
+        <li>Đứng/ngồi một tư thế quá lâu</li>
+        <li>Stress kéo dài, thiếu ngủ</li>
+        <li>Nhuộm tóc trong quý 1</li>
+        <li>Đi máy bay sau tuần 36</li>
+        <li>Đồ chiên xào nhiều dầu mỡ</li>
+        <li>Ngồi vệ sinh quá lâu (gây trĩ)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="emergency-box">
+    <h3>🚨 Vào viện ngay khi có dấu hiệu này</h3>
+    <ul>
+      <li>Ra máu bất thường từ âm đạo</li>
+      <li>Đau bụng dữ dội hoặc liên tục</li>
+      <li>Thai không đạp sau tuần 28 (dưới 10 lần/2 giờ)</li>
+      <li>Phù mặt/tay đột ngột · đau đầu dữ · nhìn mờ (tiền sản giật)</li>
+      <li>Vỡ ối — nước chảy ra âm đạo kể cả rỉ rỉ</li>
+      <li>Sốt cao >38.5°C kéo dài</li>
+      <li>Đau, rát khi tiểu · nước tiểu đục</li>
+      <li>Ngứa dữ dội toàn thân không rõ nguyên nhân (ứ mật thai kỳ)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== NÊN LÀM ========== -->
+<div class="section" id="sec-todo">
+  <div class="section-header"><div class="section-icon icon-sage">💚</div><div><div class="section-title">Những Điều Nên Làm</div><div class="section-sub">Tốt cho mẹ và sự phát triển của bé</div></div></div>
+  <div class="list-section">
+    <div class="list-item"><div class="list-bullet bull-sage">🧘</div><div class="list-text"><strong>Tập thể dục nhẹ mỗi ngày:</strong> Đi bộ 30 phút, yoga bầu, bơi lội — giảm đau lưng, kiểm soát cân nặng, cải thiện tâm trạng.</div></div>
+    <div class="list-item"><div class="list-bullet bull-sage">😴</div><div class="list-text"><strong>Ngủ nghiêng bên trái từ tuần 20:</strong> Cải thiện lưu thông máu đến nhau thai. Dùng gối ôm đặt giữa hai chân và dưới bụng.</div></div>
+    <div class="list-item"><div class="list-bullet bull-rose">🎵</div><div class="list-text"><strong>Thai giáo từ tuần 18:</strong> Nói chuyện, đọc truyện, nghe nhạc nhẹ 60–80 BPM — kích thích não bộ, tăng kết nối mẹ-bé.</div></div>
+    <div class="list-item"><div class="list-bullet bull-gold">📚</div><div class="list-text"><strong>Tham gia lớp tiền sản:</strong> Học kỹ thuật thở, rặn đẻ, chăm sóc sơ sinh, nuôi con bằng sữa mẹ.</div></div>
+    <div class="list-item"><div class="list-bullet bull-sage">🦷</div><div class="list-text"><strong>Chăm sóc răng miệng:</strong> Khám răng mỗi quý — nướu nhạy cảm hơn khi mang thai, bệnh nướu liên quan sinh non.</div></div>
+    <div class="list-item"><div class="list-bullet bull-rose">💬</div><div class="list-text"><strong>Chia sẻ cởi mở với người thân:</strong> Cùng đi khám, phân chia việc nhà, nói về cảm xúc.</div></div>
+    <div class="list-item"><div class="list-bullet bull-sage">🌿</div><div class="list-text"><strong>Quản lý stress:</strong> Thiền, hít thở 4-7-8, đọc sách, đi dạo — cortisol cao kéo dài ảnh hưởng não bé.</div></div>
+    <div class="list-item"><div class="list-bullet bull-rose">🔢</div><div class="list-text"><strong>Đếm cử động từ tuần 28:</strong> ≥10 lần trong 2 giờ sau ăn. Ghi chép lại. Thay đổi đột ngột → báo bác sĩ ngay.</div></div>
+    <div class="list-item"><div class="list-bullet bull-gold">🩺</div><div class="list-text"><strong>Đo huyết áp mỗi lần khám:</strong> Ghi lại. ≥140/90 kèm phù/đau đầu → dấu hiệu tiền sản giật, xử lý khẩn.</div></div>
+    <div class="list-item"><div class="list-bullet bull-sage">🤸</div><div class="list-text"><strong>Bài tập sàn chậu (Kegel) từ quý 1:</strong> Co cơ sàn chậu 10 giây × 10 lần × 3 hiệp/ngày. Ngăn tiểu không kiểm soát, hỗ trợ phục hồi sau sinh, giảm nguy cơ sa tạng.</div></div>
+    <div class="list-item"><div class="list-bullet bull-rose">🦷</div><div class="list-text"><strong>Kiểm tra nhóm máu Rh:</strong> Nếu Rh(−), trao đổi với bác sĩ về lịch tiêm Anti-D (tuần 28 và sau sinh). Bỏ qua bước này có thể ảnh hưởng thai kỳ sau.</div></div>
+  </div>
+</div>
+
+<!-- ========== CHECKLIST ========== -->
+<div class="section" id="sec-check">
+  <div class="section-header"><div class="section-icon icon-purple">✅</div><div><div class="section-title">Checklist Thai Kỳ</div><div class="section-sub">Nhấn để đánh dấu · Tự lưu cloud</div></div></div>
+  <div style="font-size:11px;color:var(--muted);text-align:right;margin-bottom:4px;">Hoàn thành: <strong id="ck-done">0</strong> / <strong id="ck-total">0</strong></div>
+  <div style="height:6px;background:#eeddd6;border-radius:6px;margin-bottom:13px;overflow:hidden;"><div id="ck-bar" style="height:100%;background:linear-gradient(90deg,var(--rose),var(--sage));border-radius:6px;width:0%;transition:width .4s;"></div></div>
+  <div class="checklist-group"><div class="checklist-group-title">🌱 Quý 1</div>
+    <div class="checklist">
+      <div class="check-item" onclick="chk(this)" data-id="c1"><div class="check-box"></div><div class="check-label">Uống axit folic 400mcg/ngày từ sớm</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c2"><div class="check-box"></div><div class="check-label">Tiêm vaccine cúm (từ quý 1)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c3"><div class="check-box"></div><div class="check-label">Khám xác nhận thai & tim thai (tuần 5–8)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c4"><div class="check-box"></div><div class="check-label">Xét nghiệm máu tổng quát đầu thai kỳ</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c5"><div class="check-box"></div><div class="check-label">Chọn bệnh viện & bác sĩ theo dõi thai</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c6"><div class="check-box"></div><div class="check-label">Đặt lịch Double Test (tuần 11–13)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c7"><div class="check-box"></div><div class="check-label">Sàng lọc quý 1 – Double Test + NT</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx1"><div class="check-box"></div><div class="check-label">Tiêm vaccine COVID-19 (nếu chưa tiêm)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx2"><div class="check-box"></div><div class="check-label">Bắt đầu bài tập Kegel hàng ngày</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx3"><div class="check-box"></div><div class="check-label">Khám nha khoa lần 1 (quý 1)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx4"><div class="check-box"></div><div class="check-label">Xét nghiệm nhóm máu Rh (nếu chưa biết)</div></div>
+    </div>
+  </div>
+  <div class="checklist-group"><div class="checklist-group-title">🌿 Quý 2</div>
+    <div class="checklist">
+      <div class="check-item" onclick="chk(this)" data-id="c8"><div class="check-box"></div><div class="check-label">Triple/Quad Test AFP (tuần 15–20, tối ưu 16–18)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c9"><div class="check-box"></div><div class="check-label">Siêu âm hình thái 4D (tuần 20–22)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c10"><div class="check-box"></div><div class="check-label">Đăng ký lớp tiền sản</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c11"><div class="check-box"></div><div class="check-label">Tiêm Tdap (bạch hầu–uốn ván–ho gà)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c12"><div class="check-box"></div><div class="check-label">Bắt đầu thoa kem chống rạn da</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx5"><div class="check-box"></div><div class="check-label">Khám nha khoa lần 2 (quý 2)</div></div>
+    </div>
+  </div>
+  <div class="checklist-group"><div class="checklist-group-title">🌸 Quý 3</div>
+    <div class="checklist">
+      <div class="check-item" onclick="chk(this)" data-id="c13"><div class="check-box"></div><div class="check-label">Xét nghiệm tiểu đường OGTT (tuần 28)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c14"><div class="check-box"></div><div class="check-label">Xét nghiệm GBS liên cầu khuẩn (tuần 35–37)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c15"><div class="check-box"></div><div class="check-label">Siêu âm tăng trưởng & ngôi thai (tuần 32–34)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c16"><div class="check-box"></div><div class="check-label">Chuẩn bị phòng và đồ cho bé</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c17"><div class="check-box"></div><div class="check-label">Mua và lắp ghế ô tô cho bé</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c18"><div class="check-box"></div><div class="check-label">Đăng ký bệnh viện sinh</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c19"><div class="check-box"></div><div class="check-label">Soạn túi đồ vào viện (tuần 34–36)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c20"><div class="check-box"></div><div class="check-label">Lên kế hoạch sinh (birth plan)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="c21"><div class="check-box"></div><div class="check-label">Sắp xếp người đưa đón khi chuyển dạ</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx6"><div class="check-box"></div><div class="check-label">Tiêm Anti-D tuần 28 (nếu mẹ Rh âm)</div></div>
+    </div>
+  </div>
+  <div class="checklist-group"><div class="checklist-group-title">🌼 Sau sinh</div>
+    <div class="checklist">
+      <div class="check-item" onclick="chk(this)" data-id="cx7"><div class="check-box"></div><div class="check-label">Khám hậu sản 6 tuần sau sinh</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx8"><div class="check-box"></div><div class="check-label">Tầm soát trầm cảm sau sinh (Edinburgh Scale)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx9"><div class="check-box"></div><div class="check-label">Tiêm Anti-D sau sinh (nếu bé Rh dương, mẹ Rh âm)</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx10"><div class="check-box"></div><div class="check-label">Liên hệ chuyên gia hỗ trợ cho con bú nếu cần</div></div>
+      <div class="check-item" onclick="chk(this)" data-id="cx11"><div class="check-box"></div><div class="check-label">Lịch tiêm ngừa sơ sinh (viêm gan B, BCG...)</div></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section" id="sec-health">
+  <div class="section-header"><div class="section-icon" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);font-size:22px">📊</div><div><div class="section-title">Theo dõi Sức khỏe</div><div class="section-sub">Huyết áp · Cân nặng · Thai máy</div></div></div>
+
+  <!-- Setup -->
+  <div class="health-setup">
+    <div class="hcard-title">⚙️ Thông số ban đầu</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Chiều cao (cm)</div><input class="lf-num" id="hs-height" type="number" min="130" max="200" placeholder="160" oninput="saveSetup()"></div>
+      <div><div class="lf-label">Cân trước thai (kg)</div><input class="lf-num" id="hs-wstart" type="number" min="30" max="150" placeholder="55" oninput="saveSetup()"></div>
+      <div id="hs-bmi-wrap" style="display:none"><div class="lf-label">BMI</div><div class="lf-num" id="hs-bmi" style="background:#f8f4f2;display:inline-block">--</div></div>
+    </div>
+    <div id="hs-iom" style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5"></div>
+  </div>
+
+  <!-- Blood Pressure -->
+  <div class="hcard">
+    <div class="hcard-title">❤️ Huyết áp</div>
+    <div class="hcard-ref">Tham chiếu: Bình thường &lt;120/80 · Cảnh báo 120–139/80–89 · Nguy hiểm ≥140/90 mmHg</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="bp-date" type="date"></div>
+      <div><div class="lf-label">Tâm thu</div><input class="lf-num-sm" id="bp-sys" type="number" min="60" max="220" placeholder="115"></div>
+      <div><div class="lf-label">Tâm trương</div><input class="lf-num-sm" id="bp-dia" type="number" min="40" max="140" placeholder="75"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="bp-note" type="text" placeholder="Sau nghỉ 5 phút..."></div>
+      <button class="lf-add" onclick="addBp()">+ Thêm</button>
+    </div>
+    <div class="chart-wrap" id="bp-chart"></div>
+    <div id="bp-log"></div>
+  </div>
+
+  <!-- Weight -->
+  <div class="hcard">
+    <div class="hcard-title">⚖️ Cân nặng</div>
+    <div class="hcard-ref" id="wt-ref">Nhập chiều cao &amp; cân ban đầu để xem ngưỡng tăng cân khuyến nghị (IOM 2009)</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="wt-date" type="date"></div>
+      <div><div class="lf-label">Cân nặng (kg)</div><input class="lf-num" id="wt-kg" type="number" min="30" max="150" step="0.1" placeholder="56.5"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="wt-note" type="text" placeholder="Buổi sáng..."></div>
+      <button class="lf-add" onclick="addWeight()">+ Thêm</button>
+    </div>
+    <div class="chart-wrap" id="wt-chart"></div>
+    <div id="wt-log"></div>
+  </div>
+
+  <!-- Kick count -->
+  <div class="hcard">
+    <div class="hcard-title">👶 Thai máy</div>
+    <div class="hcard-ref">Từ tuần 28: đếm 10 cử động trong 2 giờ (Cardiff method). Ít hơn 10 lần / 2h → liên hệ bác sĩ ngay.</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="kk-date" type="date"></div>
+      <div><div class="lf-label">Số lần</div><input class="lf-num-sm" id="kk-count" type="number" min="0" max="200" placeholder="10"></div>
+      <div><div class="lf-label">Thời gian (phút)</div><input class="lf-num-sm" id="kk-mins" type="number" min="1" max="240" placeholder="120"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="kk-note" type="text" placeholder="Buổi tối..."></div>
+      <button class="lf-add" onclick="addKick()">+ Thêm</button>
+    </div>
+    <div id="kk-log"></div>
+  </div>
+</div>
+
+</div>
+<div class="footer">Thông tin mang tính tham khảo. <strong>Luôn hỏi ý kiến bác sĩ sản phụ khoa</strong> cho tình trạng cá nhân. 🌸<br><span style="font-size:10px;opacity:.55;letter-spacing:.3px;">made with love · by Shirou</span></div>
+<button class="fab" onclick="scrollToNow()">📍</button>
+
+
+<script>
+// ── Firebase ──────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey:"AIzaSyANUqdWw42G_T1tFm9A82SbQhDPOHqsQiU",
+  authDomain:"pregnancy-cfc57.firebaseapp.com",
+  projectId:"pregnancy-cfc57",
+  storageBucket:"pregnancy-cfc57.firebasestorage.app",
+  messagingSenderId:"898683200466",
+  appId:"1:898683200466:web:6ca25e1f57df11806ede0b"
+});
+const db=firebase.firestore();
+
+// ── State ─────────────────────────────────────────────────
+let _sid=null,_week=10,_syncing=false,unsub=null;
+let hideT,saveT;
+const today=new Date();
+let _profile={momName:'',dadName:'',babyNick:'',theme:'rose'};
+let _bpLog=[],_weightLog=[],_kickLog=[],_hsHeight=0,_hsWstart=0;
+
+// ── Sync bar ──────────────────────────────────────────────
+const sbar=document.getElementById('sync-bar');
+const smsg=document.getElementById('sync-msg');
+function showS(state,msg,auto=true){
+  sbar.className='show '+state; smsg.textContent=msg;
+  clearTimeout(hideT);
+  if(auto) hideT=setTimeout(()=>sbar.classList.remove('show'),2800);
+}
+
+// ── Save ──────────────────────────────────────────────────
+function scheduleSave(){
+  if(!_sid) return;
+  clearTimeout(saveT); showS('saving','Đang lưu...',false);
+  saveT=setTimeout(pushData,900);
+}
+function pushData(){
+  if(!_sid) return;
+  const checks={},notes={};
+  document.querySelectorAll('.check-item').forEach(el=>checks[el.dataset.id]=el.classList.contains('checked'));
+  document.querySelectorAll('.week-note').forEach(ta=>notes[ta.dataset.week]=ta.value);
+  db.collection('sessions').doc(_sid).set({
+    checks,notes,week:_week,
+    lmp:document.getElementById('lmpDate').value||'',
+    profile:_profile,
+    health:{bpLog:_bpLog,weightLog:_weightLog,kickLog:_kickLog,hsHeight:_hsHeight,hsWstart:_hsWstart},
+    updatedAt:Date.now()
+  }).then(()=>showS('ok','✓ Đã lưu · Mã: '+_sid))
+    .catch(e=>showS('err','⚠ Lỗi: '+e.message));
+}
+
+// ── Apply data ────────────────────────────────────────────
+function applyData(data){
+  _syncing=true;
+  if(data.lmp!==undefined){const el=document.getElementById('lmpDate');if(el.value!==data.lmp)el.value=data.lmp;}
+  if(data.week&&data.week!==_week) setWeek(data.week);
+  if(data.checks){
+    document.querySelectorAll('.check-item').forEach(el=>el.classList.toggle('checked',!!data.checks[el.dataset.id]));
+    updateCkBar();
+  }
+  if(data.notes) document.querySelectorAll('.week-note').forEach(ta=>{const v=data.notes[ta.dataset.week];if(v!==undefined&&v!==ta.value)ta.value=v;});
+  if(data.profile){_profile={..._profile,...data.profile};applyTheme(_profile.theme);updateHero();}
+  if(data.health){
+    _bpLog=data.health.bpLog||[];
+    _weightLog=data.health.weightLog||[];
+    _kickLog=data.health.kickLog||[];
+    _hsHeight=data.health.hsHeight||0;
+    _hsWstart=data.health.hsWstart||0;
+    if(_hsHeight>0)document.getElementById('hs-height').value=_hsHeight;
+    if(_hsWstart>0){document.getElementById('hs-wstart').value=_hsWstart;saveSetup();}
+    renderBpLog();renderWeightLog();renderKickLog();
+  }
+  _syncing=false;
+}
+
+// ── Connect session ───────────────────────────────────────
+function connectSession(sid){
+  if(unsub){unsub();unsub=null;}
+  _sid=sid;
+  document.getElementById('sync-id-label').textContent='🔑 '+sid;
+  document.getElementById('sb-id-display').textContent=sid;
+  showS('saving','Kết nối mã '+sid+'...',false);
+
+  // Update URL
+  const url=new URL(location.href);
+  url.searchParams.set('id',sid);
+  history.replaceState(null,'',url.toString());
+
+  db.collection('sessions').doc(sid).get()
+    .then(snap=>{
+      if(snap.exists){applyData(snap.data());showS('ok','✓ Đã tải dữ liệu · Mã: '+sid);}
+      else showS('ok','✓ Mã mới: '+sid+' — bắt đầu lưu');
+    }).catch(e=>showS('err','⚠ Không thể kết nối: '+e.message));
+
+  unsub=db.collection('sessions').doc(sid).onSnapshot(snap=>{
+    if(!snap.exists||snap.metadata.hasPendingWrites)return;
+    applyData(snap.data());
+    showS('ok','🔄 Đồng bộ từ thiết bị khác · Mã: '+sid);
+  },e=>console.error(e));
+
+  localStorage.setItem('pg_session',sid);
+  document.getElementById('modal').style.display='none';
+}
+
+// ── Share & Copy ──────────────────────────────────────────
+function getShareURL(){
+  const url=new URL(location.href);
+  if(_sid) url.searchParams.set('id',_sid);
+  url.searchParams.set('week',_week);
+  return url.toString();
+}
+function copyLink(){
+  const link=getShareURL();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(link).then(()=>showToast('✓ Đã copy link!'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=link;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    showToast('✓ Đã copy link!');
+  }
+}
+function shareLink(){
+  const link=getShareURL();
+  if(navigator.share){
+    navigator.share({title:'Lộ Trình Thai Kỳ 🌸',text:'Mở link để xem lộ trình thai kỳ, mã: '+(_sid||''),url:link}).catch(()=>{});
+  } else {
+    copyLink();
+  }
+}
+function showToast(msg){
+  const t=document.getElementById('copy-toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ── Profile & Theme ───────────────────────────────────────
+let _pendingTheme='rose';
+function openProfile(){
+  const m=document.getElementById('profile-modal');
+  document.getElementById('p-mom').value=_profile.momName||'';
+  document.getElementById('p-dad').value=_profile.dadName||'';
+  document.getElementById('p-baby').value=_profile.babyNick||'';
+  _pendingTheme=_profile.theme||'rose';
+  syncThemeDots(_pendingTheme);
+  m.style.display='flex';
+}
+function closeProfile(){document.getElementById('profile-modal').style.display='none';}
+function saveProfile(){
+  _profile.momName=document.getElementById('p-mom').value.trim();
+  _profile.dadName=document.getElementById('p-dad').value.trim();
+  _profile.babyNick=document.getElementById('p-baby').value.trim();
+  _profile.theme=_pendingTheme;
+  applyTheme(_profile.theme);
+  updateHero();
+  closeProfile();
+  if(!_syncing)scheduleSave();
+}
+function selectTheme(t,el){
+  _pendingTheme=t;
+  syncThemeDots(t);
+  const labels={rose:'Hồng',sage:'Xanh lá',blue:'Xanh dương'};
+  document.getElementById('theme-label').textContent=labels[t]||t;
+}
+function syncThemeDots(t){
+  document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active',d.classList.contains('t-'+t)));
+}
+function applyTheme(t){
+  document.body.classList.remove('theme-sage','theme-blue');
+  if(t==='sage')document.body.classList.add('theme-sage');
+  else if(t==='blue')document.body.classList.add('theme-blue');
+  localStorage.setItem('pg_theme',t);
+}
+function chibiSvg(type){
+  // All use 60×60 viewBox → fills 52×52 circle container cleanly
+  if(type==='mom') return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- hair back (long purple) -->
+<ellipse cx="30" cy="24" rx="21" ry="22" fill="#a855f7"/>
+<ellipse cx="11" cy="38" rx="7" ry="13" fill="#a855f7"/>
+<ellipse cx="49" cy="38" rx="7" ry="13" fill="#a855f7"/>
+<!-- head -->
+<circle cx="30" cy="23" r="19" fill="#ffe4c4"/>
+<!-- hair front band -->
+<path d="M11 21 Q11 5 30 5 Q49 5 49 21 Q44 9 30 8 Q16 9 11 21Z" fill="#a855f7"/>
+<!-- hair bow: right side -->
+<path d="M43 7 L47 3 L50 7 L46 10Z" fill="#f472b6"/>
+<path d="M43 7 L47 11 L50 7 L46 4Z" fill="#ec4899"/>
+<circle cx="46.5" cy="7" r="2.2" fill="#fbbf24"/>
+<!-- eyes: anime style with iris + 2 highlights -->
+<ellipse cx="21" cy="22" rx="5" ry="6" fill="#1a1a2e"/>
+<ellipse cx="21" cy="23" rx="3.5" ry="4.5" fill="#7c3aed"/>
+<circle cx="19" cy="20" r="2.8" fill="white"/>
+<circle cx="23.5" cy="25.5" r="1.4" fill="white" opacity=".55"/>
+<ellipse cx="39" cy="22" rx="5" ry="6" fill="#1a1a2e"/>
+<ellipse cx="39" cy="23" rx="3.5" ry="4.5" fill="#7c3aed"/>
+<circle cx="37" cy="20" r="2.8" fill="white"/>
+<circle cx="41.5" cy="25.5" r="1.4" fill="white" opacity=".55"/>
+<!-- blush -->
+<circle cx="15" cy="28" r="6.5" fill="#fb7185" opacity=".38"/>
+<circle cx="45" cy="28" r="6.5" fill="#fb7185" opacity=".38"/>
+<!-- mouth: cute open smile -->
+<path d="M25 32 Q30 38 35 32" stroke="#a855f7" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<!-- neck + body with bump -->
+<rect x="25" y="40" width="10" height="7" rx="5" fill="#ffe4c4"/>
+<ellipse cx="30" cy="54" rx="18" ry="10" fill="#f9a8d4"/>
+<ellipse cx="30" cy="57" rx="12" ry="7" fill="#fce7f3"/>
+</svg>`;
+
+  if(type==='dad') return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- hair back -->
+<ellipse cx="30" cy="21" rx="20" ry="18" fill="#374151"/>
+<!-- head -->
+<circle cx="30" cy="23" r="18" fill="#f5c89a"/>
+<!-- hair front -->
+<path d="M12 21 Q12 6 30 6 Q48 6 48 21 Q45 11 30 10 Q15 11 12 21Z" fill="#374151"/>
+<!-- ears -->
+<ellipse cx="12" cy="24" rx="3.5" ry="4.5" fill="#f5c89a"/>
+<ellipse cx="48" cy="24" rx="3.5" ry="4.5" fill="#f5c89a"/>
+<!-- eyes: same anime style, brown iris -->
+<ellipse cx="21" cy="23" rx="5" ry="5.5" fill="#1a1a2e"/>
+<ellipse cx="21" cy="24" rx="3.5" ry="4" fill="#a16207"/>
+<circle cx="19" cy="21" r="2.6" fill="white"/>
+<circle cx="23.5" cy="26" r="1.3" fill="white" opacity=".55"/>
+<ellipse cx="39" cy="23" rx="5" ry="5.5" fill="#1a1a2e"/>
+<ellipse cx="39" cy="24" rx="3.5" ry="4" fill="#a16207"/>
+<circle cx="37" cy="21" r="2.6" fill="white"/>
+<circle cx="41.5" cy="26" r="1.3" fill="white" opacity=".55"/>
+<!-- subtle blush -->
+<circle cx="15" cy="28" r="5.5" fill="#fb7185" opacity=".18"/>
+<circle cx="45" cy="28" r="5.5" fill="#fb7185" opacity=".18"/>
+<!-- smile -->
+<path d="M25 31 Q30 36 35 31" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+<!-- neck + body -->
+<rect x="25" y="39" width="10" height="7" rx="5" fill="#f5c89a"/>
+<ellipse cx="30" cy="53" rx="18" ry="10" fill="#60a5fa"/>
+<!-- collar V -->
+<path d="M23 44 L30 50 L37 44" fill="none" stroke="white" stroke-width="1.5" opacity=".6" stroke-linejoin="round"/>
+</svg>`;
+
+  // baby
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- chubby cheek extensions -->
+<ellipse cx="7" cy="30" rx="6" ry="7" fill="#fde8c8"/>
+<ellipse cx="53" cy="30" rx="6" ry="7" fill="#fde8c8"/>
+<!-- head: HUGE, fills viewbox -->
+<circle cx="30" cy="27" r="23" fill="#fde8c8"/>
+<!-- wispy hair: 3 strands -->
+<path d="M22 5 Q24 1 27 5" stroke="#fbbf24" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<path d="M30 3 Q30 0 32 4" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M36 5 Q38 1 40 5" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
+<!-- eyes: wide-set, big for baby -->
+<ellipse cx="19" cy="27" rx="5.5" ry="6.5" fill="#1a1a2e"/>
+<ellipse cx="19" cy="28" rx="4" ry="5" fill="#1e3a5f"/>
+<circle cx="16.5" cy="24.5" r="3" fill="white"/>
+<circle cx="21.5" cy="30" r="1.5" fill="white" opacity=".55"/>
+<ellipse cx="41" cy="27" rx="5.5" ry="6.5" fill="#1a1a2e"/>
+<ellipse cx="41" cy="28" rx="4" ry="5" fill="#1e3a5f"/>
+<circle cx="38.5" cy="24.5" r="3" fill="white"/>
+<circle cx="43.5" cy="30" r="1.5" fill="white" opacity=".55"/>
+<!-- mega blush -->
+<circle cx="10" cy="33" r="8.5" fill="#fb7185" opacity=".38"/>
+<circle cx="50" cy="33" r="8.5" fill="#fb7185" opacity=".38"/>
+<!-- tiny sweet smile -->
+<path d="M24 37 Q30 44 36 37" stroke="#f472b6" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<!-- swaddle body -->
+<ellipse cx="30" cy="55" rx="18" ry="9" fill="#fef9c3"/>
+<path d="M14 52 Q30 48 46 52" stroke="#fde68a" stroke-width="2" fill="none"/>
+<!-- tiny fists -->
+<circle cx="11" cy="50" r="5.5" fill="#fde8c8"/>
+<circle cx="49" cy="50" r="5.5" fill="#fde8c8"/>
+</svg>`;
+}
+
+function chibiCard(type,name,role){
+  const small=type==='baby'?' chibi-baby':'';
+  return `<div class="chibi-card${small}"><div class="chibi-av c-${type}">${chibiSvg(type)}</div><div class="chibi-name">${name}</div><div class="chibi-role">${role}</div></div>`;
+}
+
+function updateRing(w){
+  const el=document.getElementById('wr-fill');
+  const num=document.getElementById('hero-ring-week');
+  if(!el) return;
+  const circ=2*Math.PI*34;
+  el.style.strokeDashoffset=circ*(1-Math.min(1,w/40));
+  if(num) num.textContent=w;
+}
+
+function updateHero(){
+  const {momName,dadName,babyNick}=_profile;
+  const tag=document.getElementById('hero-baby-tag');
+  const title=document.getElementById('hero-title');
+  const fam=document.getElementById('hero-family');
+  // Title + baby tag
+  if(babyNick){
+    tag.textContent=`Đang chờ ${babyNick} chào đời 🍼`;
+    title.innerHTML=`Hành trình của ${momName||'Mẹ'}<br><em>Theo Từng Tuần</em>`;
+  } else if(momName){
+    tag.textContent='';
+    title.innerHTML=`Hành trình của ${momName}<br><em>Theo Từng Tuần</em>`;
+  } else {
+    tag.textContent='';
+    title.innerHTML='Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em>';
+  }
+  // Chibi row
+  let html='';
+  if(momName) html+=chibiCard('mom',momName,'Mẹ');
+  if(babyNick) html+=chibiCard('baby',babyNick,'Bé yêu');
+  if(dadName)  html+=chibiCard('dad',dadName,'Bố');
+  fam.innerHTML=html;
+}
+
+
+// ── Modal ─────────────────────────────────────────────────
+function openModal(){document.getElementById('modal').style.display='flex';}
+function genID(){
+  const w=['HOA','MAM','BAU','MAMA','BABY','LOVE','STAR'];
+  document.getElementById('sid-input').value=w[Math.floor(Math.random()*w.length)]+(Math.floor(Math.random()*9000)+1000);
+}
+function doConnect(){
+  const v=document.getElementById('sid-input').value.trim().toUpperCase();
+  const err=document.getElementById('modal-err');
+  if(v.length<3){err.textContent='Mã phải có ít nhất 3 ký tự';return;}
+  err.textContent='';connectSession(v);
+}
+
+// ── Auto-load: URL ?id= > localStorage ───────────────────
+(function(){
+  const p=new URLSearchParams(location.search);
+  const urlId=p.get('id');
+  const saved=localStorage.getItem('pg_session');
+  const sid=(urlId||saved||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(p.get('week')) _week=Math.max(1,Math.min(42,parseInt(p.get('week'))||10));
+  if(sid){document.getElementById('sid-input').value=sid;connectSession(sid);}
+})();
+
+// ── Fetal size by week ────────────────────────────────────
+const SIZE_BY_WEEK={4:'🫘 Hạt vừng',5:'🌱 Hạt mè',6:'🫐 Việt quất',7:'🍓 Mâm xôi',8:'🍓 Dâu tây',9:'🍇 Trái nho',10:'🍋 Quả chanh',11:'🥝 Kiwi nhỏ',12:'🥝 Kiwi',13:'🍋 Chanh vàng',14:'🍑 Quả đào',15:'🍎 Quả táo',16:'🥑 Trái bơ',17:'🍐 Quả lê',18:'🥒 Dưa leo',19:'🥭 Xoài',20:'🍌 Chuối',21:'🥕 Cà rốt',22:'🌽 Bắp ngô',23:'🍆 Cà tím',24:'🥦 Súp lơ',25:'🥬 Bó xà lách',26:'🥬 Bắp cải',27:'🥬 Cải thảo',28:'🌿 Cần tây',29:'🎃 Bí nhỏ',30:'🍉 Dưa hấu nhỏ',31:'🍍 Trái dứa',32:'🥦 Súp lơ lớn',33:'🍍 Thơm',34:'🎃 Bí ngô',35:'🎃 Bí đỏ',36:'🎃 Dưa lưới',37:'🎃 Dưa gang',38:'🎃 Dưa hấu',39:'🎃 Dưa hấu lớn',40:'👶 Bé sơ sinh'};
+
+// ── Date helpers ──────────────────────────────────────────
+function fmt(d){return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function getDue(w){const d=new Date(today);d.setDate(d.getDate()+(40-w)*7);return d;}
+function dl(w){return Math.max(0,Math.round((40-w)*7));}
+function trim(w){return w<=12?1:w<=27?2:3;}
+function trimLbl(w){return['','Quý 1','Quý 2','Quý 3'][trim(w)];}
+function trimDesc(w){
+  if(w<=12)return'Bé đang hình thành các cơ quan sống còn';
+  if(w<=27)return'Giai đoạn ổn định, bé bắt đầu cử động rõ';
+  return'Bé lớn nhanh mỗi ngày, chuẩn bị chào đời';
+}
+
+// ── Render ────────────────────────────────────────────────
+function render(){
+  const w=_week,due=getDue(w),d=dl(w),pct=Math.min(100,Math.round(w/40*100));
+  document.getElementById('today-display').textContent=fmt(today);
+  document.getElementById('due-display').textContent=fmt(due);
+  document.getElementById('days-left-hero').textContent=d>0?'Còn '+d+' ngày':'🎉 Ngày dự sinh!';
+  document.getElementById('banner-week').textContent='Tuần '+w;
+  document.getElementById('banner-title').textContent=trimLbl(w)+' — Tuần '+w;
+  document.getElementById('banner-desc').textContent=trimDesc(w);
+  document.getElementById('banner-date').textContent='Hôm nay: '+fmt(today);
+  document.getElementById('countdown-pill').textContent=d>0?'🍼 Còn '+d+' ngày':'🎉 Ngày dự sinh!';
+  const sz=SIZE_BY_WEEK[Math.min(w,40)];if(sz)document.getElementById('banner-size').textContent=sz;
+  updateRing(w);
+  document.getElementById('weekNum').value=w;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent='Tuần '+w+'/40';
+  document.getElementById('prog-sub').textContent=d>0?'Còn khoảng '+(40-w)+' tuần · '+trimLbl(w)+' · Dự sinh '+fmt(due):'🎉 Đã đến ngày dự sinh! Chúc mẹ tròn con vuông!';
+
+  document.querySelectorAll('.week-block').forEach(b=>{
+    const s=+b.dataset.s,e=+b.dataset.e;
+    b.classList.remove('is-current','is-past');
+    b.querySelectorAll('.wh-now').forEach(el=>el.remove());
+    if(w>=s&&w<=e){
+      b.classList.add('is-current','open');
+      const chev=b.querySelector('.wh-chevron');
+      const badge=document.createElement('span');
+      badge.className='wh-now';badge.textContent='📍 Đang ở đây';
+      chev.before(badge);
+    } else if(w>e) b.classList.add('is-past');
+  });
+
+  // Update URL (keep id param)
+  const url=new URL(location.href);
+  url.searchParams.set('week',w);
+  if(_sid) url.searchParams.set('id',_sid);
+  history.replaceState(null,'',url.toString());
+
+  setTimeout(()=>{
+    const cur=document.querySelector('.week-block.is-current');
+    if(cur)cur.scrollIntoView({behavior:'smooth',block:'center'});
+  },300);
+}
+
+function setWeek(w){_week=Math.max(1,Math.min(42,parseInt(w)||_week));render();}
+function adjustWeek(d){setWeek(_week+d);if(!_syncing)scheduleSave();}
+function onWeekInput(v){setWeek(v);if(!_syncing)scheduleSave();}
+function onLmpChange(){
+  const val=document.getElementById('lmpDate').value;
+  if(!val)return;
+  const lmp=new Date(val);
+  const diff=Math.floor((today-lmp)/(7*24*3600*1000));
+  setWeek(Math.max(1,Math.min(42,diff)));
+  if(!_syncing)scheduleSave();
+}
+
+// ── UI ────────────────────────────────────────────────────
+function toggleBlock(b){b.classList.toggle('open');}
+function scrollToNow(){const cur=document.querySelector('.week-block.is-current');if(cur)cur.scrollIntoView({behavior:'smooth',block:'center'});}
+function navTo(id,pill){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  if(pill)pill.classList.add('active');
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function switchNut(n,btn){
+  document.querySelectorAll('.trim-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.trim-nut-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('nut-'+n).classList.add('active');
+}
+
+// ── Checklist ─────────────────────────────────────────────
+function chk(el){el.classList.toggle('checked');updateCkBar();if(!_syncing)scheduleSave();}
+function updateCkBar(){
+  const all=document.querySelectorAll('.check-item').length;
+  const done=document.querySelectorAll('.check-item.checked').length;
+  document.getElementById('ck-done').textContent=done;
+  document.getElementById('ck-total').textContent=all;
+  document.getElementById('ck-bar').style.width=Math.round(done/all*100)+'%';
+}
+
+// ── Notes ─────────────────────────────────────────────────
+document.querySelectorAll('.week-note').forEach(ta=>{
+  ta.addEventListener('input',()=>{if(!_syncing)scheduleSave();});
+});
+
+// ── Health helpers ────────────────────────────────────────
+function todayStr(){return new Date().toISOString().slice(0,10);}
+
+function saveSetup(){
+  const h=parseFloat(document.getElementById('hs-height').value)||0;
+  const w=parseFloat(document.getElementById('hs-wstart').value)||0;
+  _hsHeight=h; _hsWstart=w;
+  if(h>0&&w>0){
+    const bmi=w/(h/100*h/100);
+    document.getElementById('hs-bmi').textContent=bmi.toFixed(1);
+    document.getElementById('hs-bmi-wrap').style.display='';
+    const ref=getIomRef(bmi);
+    document.getElementById('hs-iom').textContent=ref;
+    document.getElementById('wt-ref').textContent=ref;
+    renderWeightLog();
+  } else {
+    document.getElementById('hs-bmi-wrap').style.display='none';
+  }
+  scheduleSave();
+}
+
+function getIomRef(bmi){
+  if(bmi<18.5) return '📋 IOM 2009: BMI thiếu cân (<18.5) → tăng khuyến nghị 12.5–18 kg';
+  if(bmi<25)   return '📋 IOM 2009: BMI bình thường (18.5–24.9) → tăng khuyến nghị 11.5–16 kg';
+  if(bmi<30)   return '📋 IOM 2009: BMI thừa cân (25–29.9) → tăng khuyến nghị 7–11.5 kg';
+  return '📋 IOM 2009: BMI béo phì (≥30) → tăng khuyến nghị 5–9 kg';
+}
+
+function getIomBand(bmi){
+  if(bmi<18.5) return [12.5,18];
+  if(bmi<25)   return [11.5,16];
+  if(bmi<30)   return [7,11.5];
+  return [5,9];
+}
+
+// ── Blood Pressure ────────────────────────────────────────
+function bpStatus(sys,dia){
+  if(sys>=140||dia>=90) return '<span class="st-alert">⚠ Nguy hiểm</span>';
+  if(sys>=120||dia>=80) return '<span class="st-warn">△ Cảnh báo</span>';
+  return '<span class="st-ok">✓ Bình thường</span>';
+}
+
+function addBp(){
+  const d=document.getElementById('bp-date').value||todayStr();
+  const s=parseInt(document.getElementById('bp-sys').value);
+  const di=parseInt(document.getElementById('bp-dia').value);
+  const n=document.getElementById('bp-note').value.trim();
+  if(!s||!di||s<60||di<40){alert('Vui lòng nhập huyết áp hợp lệ (tâm thu và tâm trương)');return;}
+  _bpLog.unshift({d,s,di,n,ts:Date.now()});
+  document.getElementById('bp-sys').value='';
+  document.getElementById('bp-dia').value='';
+  document.getElementById('bp-note').value='';
+  renderBpLog();
+  scheduleSave();
+}
+
+function delBp(ts){_bpLog=_bpLog.filter(x=>x.ts!==ts);renderBpLog();scheduleSave();}
+
+function renderBpLog(){
+  const sorted=[..._bpLog].sort((a,b)=>a.d.localeCompare(b.d));
+  const chartEl=document.getElementById('bp-chart');
+  chartEl.innerHTML=sorted.length<2?'<div class="chart-empty">Cần ít nhất 2 điểm để vẽ biểu đồ</div>':buildBpSvg(sorted);
+  const el=document.getElementById('bp-log');
+  if(!_bpLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu huyết áp</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>HA (mmHg)</th><th>Trạng thái</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _bpLog.map(x=>`<tr><td>${x.d}</td><td><strong>${x.s}/${x.di}</strong></td><td>${bpStatus(x.s,x.di)}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delBp(${x.ts})">✕</span></td></tr>`).join('')+
+    '</tbody></table>';
+}
+
+function buildBpSvg(pts){
+  const W=320,H=110,pad={t:14,r:28,b:24,l:30};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const allV=[...pts.map(p=>p.s),...pts.map(p=>p.di),90,80];
+  const mn=Math.min(...allV)-5, mx=Math.max(...allV)+5;
+  const xp=i=>pad.l+(pts.length<2?iW/2:i/(pts.length-1)*iW);
+  const yp=v=>pad.t+iH-(v-mn)/(mx-mn)*iH;
+  const line=arr=>'<polyline fill="none" stroke="'+arr[1]+'" stroke-width="2" points="'+arr[0].map((v,i)=>xp(i)+','+yp(v)).join(' ')+'"/>';
+  const dots=arr=>arr[0].map((v,i)=>'<circle cx="'+xp(i)+'" cy="'+yp(v)+'" r="3.5" fill="'+arr[1]+'"><title>'+v+'</title></circle>').join('');
+  const ref=(v,col,lbl)=>'<line x1="'+pad.l+'" x2="'+(W-pad.r+4)+'" y1="'+yp(v)+'" y2="'+yp(v)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4,3"/><text x="'+(W-pad.r+6)+'" y="'+(yp(v)+3)+'" font-size="8" fill="'+col+'">'+lbl+'</text>';
+  const labels=pts.filter((_,i)=>pts.length<=6||i%Math.ceil(pts.length/6)===0||i===pts.length-1).map(p=>'<text x="'+xp(pts.indexOf(p))+'" y="'+(H-5)+'" font-size="9" text-anchor="middle" fill="#bbb">'+p.d.slice(5)+'</text>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:'+W+'px">'+
+    ref(140,'#e06060','140')+ref(90,'#f0a040','90')+
+    line([pts.map(p=>p.s),'#e06060'])+line([pts.map(p=>p.di),'#5b9bd5'])+
+    dots([pts.map(p=>p.s),'#e06060'])+dots([pts.map(p=>p.di),'#5b9bd5'])+
+    labels+
+    '<text x="6" y="'+(yp(pts[pts.length-1].s)+4)+'" font-size="9" fill="#e06060">TT</text>'+
+    '<text x="6" y="'+(yp(pts[pts.length-1].di)+4)+'" font-size="9" fill="#5b9bd5">TR</text>'+
+    '</svg>';
+}
+
+// ── Weight ────────────────────────────────────────────────
+function addWeight(){
+  const d=document.getElementById('wt-date').value||todayStr();
+  const kg=parseFloat(document.getElementById('wt-kg').value);
+  const n=document.getElementById('wt-note').value.trim();
+  if(!kg||kg<30){alert('Vui lòng nhập cân nặng hợp lệ');return;}
+  _weightLog.unshift({d,kg,n,ts:Date.now()});
+  document.getElementById('wt-kg').value='';
+  document.getElementById('wt-note').value='';
+  renderWeightLog();
+  scheduleSave();
+}
+
+function delWeight(ts){_weightLog=_weightLog.filter(x=>x.ts!==ts);renderWeightLog();scheduleSave();}
+
+function renderWeightLog(){
+  const sorted=[..._weightLog].sort((a,b)=>a.d.localeCompare(b.d));
+  const chartEl=document.getElementById('wt-chart');
+  chartEl.innerHTML=sorted.length<2?'<div class="chart-empty">Cần ít nhất 2 điểm để vẽ biểu đồ</div>':buildWtSvg(sorted);
+  const el=document.getElementById('wt-log');
+  if(!_weightLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu cân nặng</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>Cân nặng</th><th>Tăng từ đầu</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _weightLog.map(x=>{
+      const gain=_hsWstart>0?'+'+(x.kg-_hsWstart).toFixed(1)+' kg':'--';
+      return `<tr><td>${x.d}</td><td><strong>${x.kg} kg</strong></td><td style="color:var(--rose);font-weight:600">${gain}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delWeight(${x.ts})">✕</span></td></tr>`;
+    }).join('')+'</tbody></table>';
+}
+
+function buildWtSvg(pts){
+  const W=320,H=110,pad={t:14,r:14,b:24,l:36};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const vals=pts.map(p=>p.kg);
+  let lo=_hsWstart>0&&_hsHeight>0?_hsWstart+getIomBand(_hsWstart/(_hsHeight/100*_hsHeight/100))[0]:null;
+  let hi=_hsWstart>0&&_hsHeight>0?_hsWstart+getIomBand(_hsWstart/(_hsHeight/100*_hsHeight/100))[1]:null;
+  const allV=lo!=null?[...vals,lo,hi]:[...vals];
+  const mn=Math.min(...allV)-1, mx=Math.max(...allV)+1;
+  const xp=i=>pad.l+(pts.length<2?iW/2:i/(pts.length-1)*iW);
+  const yp=v=>pad.t+iH-(v-mn)/(mx-mn)*iH;
+  let band='';
+  if(lo!=null&&hi!=null){
+    const y1=yp(hi),y2=yp(lo);
+    band='<rect x="'+pad.l+'" y="'+y1+'" width="'+iW+'" height="'+(y2-y1)+'" fill="#e8f5e9" opacity=".7"/>';
+  }
+  const labels=pts.filter((_,i)=>pts.length<=6||i%Math.ceil(pts.length/6)===0||i===pts.length-1).map(p=>'<text x="'+xp(pts.indexOf(p))+'" y="'+(H-5)+'" font-size="9" text-anchor="middle" fill="#bbb">'+p.d.slice(5)+'</text>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:'+W+'px">'+band+
+    '<polyline fill="none" stroke="#7aaa6a" stroke-width="2" points="'+pts.map((p,i)=>xp(i)+','+yp(p.kg)).join(' ')+'"/>'+
+    pts.map((p,i)=>'<circle cx="'+xp(i)+'" cy="'+yp(p.kg)+'" r="3.5" fill="#7aaa6a"><title>'+p.kg+' kg</title></circle>').join('')+
+    labels+'</svg>';
+}
+
+// ── Kick count ────────────────────────────────────────────
+function kickStatus(count,mins){
+  if(mins<=120&&count>=10) return '<span class="st-ok">✓ Tốt (≥10 lần/2h)</span>';
+  if(count<10&&mins>=120)  return '<span class="st-alert">⚠ Ít cử động – hỏi bác sĩ</span>';
+  return '<span class="st-warn">△ Đang đếm</span>';
+}
+
+function addKick(){
+  const d=document.getElementById('kk-date').value||todayStr();
+  const count=parseInt(document.getElementById('kk-count').value);
+  const mins=parseInt(document.getElementById('kk-mins').value)||120;
+  const n=document.getElementById('kk-note').value.trim();
+  if(isNaN(count)||count<0){alert('Vui lòng nhập số lần thai máy');return;}
+  _kickLog.unshift({d,count,mins,n,ts:Date.now()});
+  document.getElementById('kk-count').value='';
+  document.getElementById('kk-mins').value='';
+  document.getElementById('kk-note').value='';
+  renderKickLog();
+  scheduleSave();
+}
+
+function delKick(ts){_kickLog=_kickLog.filter(x=>x.ts!==ts);renderKickLog();scheduleSave();}
+
+function renderKickLog(){
+  const el=document.getElementById('kk-log');
+  if(!_kickLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu thai máy</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>Số lần</th><th>Thời gian</th><th>Trạng thái</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _kickLog.map(x=>`<tr><td>${x.d}</td><td><strong>${x.count}</strong></td><td>${x.mins} phút</td><td>${kickStatus(x.count,x.mins)}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delKick(${x.ts})">✕</span></td></tr>`).join('')+'</tbody></table>';
+}
+
+// ── Health date init ──────────────────────────────────────
+(function(){const t=todayStr();['bp-date','wt-date','kk-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});})();
+
+// ── Init ──────────────────────────────────────────────────
+(function(){const t=localStorage.getItem('pg_theme');if(t)applyTheme(t);})();
+document.getElementById('today-display').textContent=fmt(today);
+render();
+updateCkBar();
+updateHero();
+renderBpLog();renderWeightLog();renderKickLog();
+</script>
+</body>
+</html>
