@@ -223,6 +223,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 #sync-id-label{margin-left:auto;opacity:.6;font-size:10px;}
 .sync-change{cursor:pointer;opacity:.7;font-size:10px;text-decoration:underline;white-space:nowrap;background:none;border:none;color:white;font-family:'DM Sans',sans-serif;}
 
+/* ── HEALTH SECTION ── */
+.health-setup{background:white;border-radius:12px;padding:12px 14px;margin-bottom:12px;border:1.5px solid #eeddd6;}
+.setup-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;}
+.setup-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+.setup-field{display:flex;flex-direction:column;gap:3px;}
+.setup-field label{font-size:10.5px;font-weight:600;color:var(--muted);}
+.setup-field input{border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--deep);width:100px;}
+.setup-field input:focus{outline:none;border-color:var(--rose);}
+.setup-save{padding:7px 14px;background:var(--rose);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;align-self:flex-end;}
+.bmi-badge{font-size:11px;color:var(--muted);padding:5px 9px;background:var(--blush);border-radius:8px;white-space:nowrap;align-self:flex-end;border:1px solid #eeddd6;}
+.hcard{background:white;border-radius:14px;padding:14px;margin-bottom:10px;border:1.5px solid #eeddd6;}
+.hcard-title{font-size:13px;font-weight:700;color:var(--deep);margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.hcard-ref{font-size:11.5px;background:var(--blush);border-radius:9px;padding:8px 11px;margin-bottom:10px;color:var(--text);line-height:1.65;}
+.hcard-ref strong{color:var(--rose);}
+.log-form{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;margin-bottom:10px;}
+.lf-label{font-size:9.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px;}
+.lf-date{width:130px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);}
+.lf-date:focus,.lf-num:focus,.lf-note:focus{outline:none;border-color:var(--rose);}
+.lf-num{width:75px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);text-align:center;}
+.lf-num-sm{width:58px;}
+.lf-note{flex:1;min-width:100px;border:1.5px solid #e0d0c8;border-radius:8px;padding:6px 9px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--deep);}
+.lf-add{padding:7px 14px;background:var(--rose);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;align-self:flex-end;}
+.lf-add:hover{opacity:.9;}
+.chart-wrap{margin:4px 0 10px;min-height:20px;}
+.chart-empty{font-size:11px;color:var(--muted);text-align:center;padding:10px 0;}
+.log-tbl{width:100%;border-collapse:collapse;font-size:11.5px;}
+.log-tbl th{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:left;padding:4px 6px;border-bottom:1.5px solid #eeddd6;}
+.log-tbl td{padding:5px 6px;border-bottom:1px solid #f5eeea;vertical-align:middle;}
+.log-tbl tr:last-child td{border-bottom:none;}
+.log-tbl tr:hover td{background:#fdf8f5;}
+.st-ok{font-size:9.5px;font-weight:700;color:#3a7a60;background:#daeee6;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.st-warn{font-size:9.5px;font-weight:700;color:#9a6f1a;background:#fdf0d8;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.st-alert{font-size:9.5px;font-weight:700;color:#c0402a;background:#fde8e0;padding:2px 6px;border-radius:5px;white-space:nowrap;}
+.tbl-del{background:none;border:none;cursor:pointer;color:#c0a898;font-size:12px;padding:2px 4px;border-radius:4px;}
+.tbl-del:hover{color:var(--rose);}
+
 /* ── HERO PERSONALIZATION ── */
 .hero{background:linear-gradient(135deg,var(--blush) 0%,var(--cream) 50%,rgba(122,158,142,.12) 100%);position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:260px;height:260px;background:radial-gradient(circle,rgba(212,133,106,.12) 0%,transparent 70%);border-radius:50%;}
@@ -358,6 +394,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   <span class="pill" onclick="navTo('sec-avoid',this)">⚠️ Kiêng cữ</span>
   <span class="pill" onclick="navTo('sec-todo',this)">💚 Nên làm</span>
   <span class="pill" onclick="navTo('sec-check',this)">✅ Checklist</span>
+  <span class="pill" onclick="navTo('sec-health',this)">📊 Sức khỏe</span>
 </div>
 
 <div class="container">
@@ -701,6 +738,65 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   </div>
 </div>
 
+
+<div class="section" id="sec-health" style="display:none">
+  <div class="section-header"><div class="section-icon" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);font-size:22px">📊</div><div><div class="section-title">Theo dõi Sức khỏe</div><div class="section-sub">Huyết áp · Cân nặng · Thai máy</div></div></div>
+
+  <!-- Setup -->
+  <div class="health-setup">
+    <div class="hcard-title">⚙️ Thông số ban đầu</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Chiều cao (cm)</div><input class="lf-num" id="hs-height" type="number" min="130" max="200" placeholder="160" oninput="saveSetup()"></div>
+      <div><div class="lf-label">Cân trước thai (kg)</div><input class="lf-num" id="hs-wstart" type="number" min="30" max="150" placeholder="55" oninput="saveSetup()"></div>
+      <div id="hs-bmi-wrap" style="display:none"><div class="lf-label">BMI</div><div class="lf-num" id="hs-bmi" style="background:#f8f4f2;display:inline-block">--</div></div>
+    </div>
+    <div id="hs-iom" style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5"></div>
+  </div>
+
+  <!-- Blood Pressure -->
+  <div class="hcard">
+    <div class="hcard-title">❤️ Huyết áp</div>
+    <div class="hcard-ref">Tham chiếu: Bình thường &lt;120/80 · Cảnh báo 120–139/80–89 · Nguy hiểm ≥140/90 mmHg</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="bp-date" type="date"></div>
+      <div><div class="lf-label">Tâm thu</div><input class="lf-num-sm" id="bp-sys" type="number" min="60" max="220" placeholder="115"></div>
+      <div><div class="lf-label">Tâm trương</div><input class="lf-num-sm" id="bp-dia" type="number" min="40" max="140" placeholder="75"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="bp-note" type="text" placeholder="Sau nghỉ 5 phút..."></div>
+      <button class="lf-add" onclick="addBp()">+ Thêm</button>
+    </div>
+    <div class="chart-wrap" id="bp-chart"></div>
+    <div id="bp-log"></div>
+  </div>
+
+  <!-- Weight -->
+  <div class="hcard">
+    <div class="hcard-title">⚖️ Cân nặng</div>
+    <div class="hcard-ref" id="wt-ref">Nhập chiều cao &amp; cân ban đầu để xem ngưỡng tăng cân khuyến nghị (IOM 2009)</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="wt-date" type="date"></div>
+      <div><div class="lf-label">Cân nặng (kg)</div><input class="lf-num" id="wt-kg" type="number" min="30" max="150" step="0.1" placeholder="56.5"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="wt-note" type="text" placeholder="Buổi sáng..."></div>
+      <button class="lf-add" onclick="addWeight()">+ Thêm</button>
+    </div>
+    <div class="chart-wrap" id="wt-chart"></div>
+    <div id="wt-log"></div>
+  </div>
+
+  <!-- Kick count -->
+  <div class="hcard">
+    <div class="hcard-title">👶 Thai máy</div>
+    <div class="hcard-ref">Từ tuần 28: đếm 10 cử động trong 2 giờ (Cardiff method). Ít hơn 10 lần / 2h → liên hệ bác sĩ ngay.</div>
+    <div class="log-form" style="margin-top:8px">
+      <div><div class="lf-label">Ngày</div><input class="lf-date" id="kk-date" type="date"></div>
+      <div><div class="lf-label">Số lần</div><input class="lf-num-sm" id="kk-count" type="number" min="0" max="200" placeholder="10"></div>
+      <div><div class="lf-label">Thời gian (phút)</div><input class="lf-num-sm" id="kk-mins" type="number" min="1" max="240" placeholder="120"></div>
+      <div><div class="lf-label">Ghi chú</div><input class="lf-note" id="kk-note" type="text" placeholder="Buổi tối..."></div>
+      <button class="lf-add" onclick="addKick()">+ Thêm</button>
+    </div>
+    <div id="kk-log"></div>
+  </div>
+</div>
+
 </div>
 <div class="footer">Thông tin mang tính tham khảo. <strong>Luôn hỏi ý kiến bác sĩ sản phụ khoa</strong> cho tình trạng cá nhân. 🌸</div>
 <button class="fab" onclick="scrollToNow()">📍</button>
@@ -723,6 +819,7 @@ let _sid=null,_week=10,_syncing=false,unsub=null;
 let hideT,saveT;
 const today=new Date();
 let _profile={momName:'',dadName:'',babyNick:'',theme:'rose'};
+let _bpLog=[],_weightLog=[],_kickLog=[],_hsHeight=0,_hsWstart=0;
 
 // ── Sync bar ──────────────────────────────────────────────
 const sbar=document.getElementById('sync-bar');
@@ -748,6 +845,7 @@ function pushData(){
     checks,notes,week:_week,
     lmp:document.getElementById('lmpDate').value||'',
     profile:_profile,
+    health:{bpLog:_bpLog,weightLog:_weightLog,kickLog:_kickLog,hsHeight:_hsHeight,hsWstart:_hsWstart},
     updatedAt:Date.now()
   }).then(()=>showS('ok','✓ Đã lưu · Mã: '+_sid))
     .catch(e=>showS('err','⚠ Lỗi: '+e.message));
@@ -764,6 +862,16 @@ function applyData(data){
   }
   if(data.notes) document.querySelectorAll('.week-note').forEach(ta=>{const v=data.notes[ta.dataset.week];if(v!==undefined&&v!==ta.value)ta.value=v;});
   if(data.profile){_profile={..._profile,...data.profile};applyTheme(_profile.theme);updateHero();}
+  if(data.health){
+    _bpLog=data.health.bpLog||[];
+    _weightLog=data.health.weightLog||[];
+    _kickLog=data.health.kickLog||[];
+    _hsHeight=data.health.hsHeight||0;
+    _hsWstart=data.health.hsWstart||0;
+    if(_hsHeight>0)document.getElementById('hs-height').value=_hsHeight;
+    if(_hsWstart>0){document.getElementById('hs-wstart').value=_hsWstart;saveSetup();}
+    renderBpLog();renderWeightLog();renderKickLog();
+  }
   _syncing=false;
 }
 
@@ -1004,6 +1112,179 @@ function updateCkBar(){
 document.querySelectorAll('.week-note').forEach(ta=>{
   ta.addEventListener('input',()=>{if(!_syncing)scheduleSave();});
 });
+
+// ── Health helpers ────────────────────────────────────────
+function todayStr(){return new Date().toISOString().slice(0,10);}
+
+function saveSetup(){
+  const h=parseFloat(document.getElementById('hs-height').value)||0;
+  const w=parseFloat(document.getElementById('hs-wstart').value)||0;
+  _hsHeight=h; _hsWstart=w;
+  if(h>0&&w>0){
+    const bmi=w/(h/100*h/100);
+    document.getElementById('hs-bmi').textContent=bmi.toFixed(1);
+    document.getElementById('hs-bmi-wrap').style.display='';
+    const ref=getIomRef(bmi);
+    document.getElementById('hs-iom').textContent=ref;
+    document.getElementById('wt-ref').textContent=ref;
+    renderWeightLog();
+  } else {
+    document.getElementById('hs-bmi-wrap').style.display='none';
+  }
+  scheduleSave();
+}
+
+function getIomRef(bmi){
+  if(bmi<18.5) return '📋 IOM 2009: BMI thiếu cân (<18.5) → tăng khuyến nghị 12.5–18 kg';
+  if(bmi<25)   return '📋 IOM 2009: BMI bình thường (18.5–24.9) → tăng khuyến nghị 11.5–16 kg';
+  if(bmi<30)   return '📋 IOM 2009: BMI thừa cân (25–29.9) → tăng khuyến nghị 7–11.5 kg';
+  return '📋 IOM 2009: BMI béo phì (≥30) → tăng khuyến nghị 5–9 kg';
+}
+
+function getIomBand(bmi){
+  if(bmi<18.5) return [12.5,18];
+  if(bmi<25)   return [11.5,16];
+  if(bmi<30)   return [7,11.5];
+  return [5,9];
+}
+
+// ── Blood Pressure ────────────────────────────────────────
+function bpStatus(sys,dia){
+  if(sys>=140||dia>=90) return '<span class="st-alert">⚠ Nguy hiểm</span>';
+  if(sys>=120||dia>=80) return '<span class="st-warn">△ Cảnh báo</span>';
+  return '<span class="st-ok">✓ Bình thường</span>';
+}
+
+function addBp(){
+  const d=document.getElementById('bp-date').value||todayStr();
+  const s=parseInt(document.getElementById('bp-sys').value);
+  const di=parseInt(document.getElementById('bp-dia').value);
+  const n=document.getElementById('bp-note').value.trim();
+  if(!s||!di||s<60||di<40){alert('Vui lòng nhập huyết áp hợp lệ (tâm thu và tâm trương)');return;}
+  _bpLog.unshift({d,s,di,n,ts:Date.now()});
+  document.getElementById('bp-sys').value='';
+  document.getElementById('bp-dia').value='';
+  document.getElementById('bp-note').value='';
+  renderBpLog();
+  scheduleSave();
+}
+
+function delBp(ts){_bpLog=_bpLog.filter(x=>x.ts!==ts);renderBpLog();scheduleSave();}
+
+function renderBpLog(){
+  const sorted=[..._bpLog].sort((a,b)=>a.d.localeCompare(b.d));
+  const chartEl=document.getElementById('bp-chart');
+  chartEl.innerHTML=sorted.length<2?'<div class="chart-empty">Cần ít nhất 2 điểm để vẽ biểu đồ</div>':buildBpSvg(sorted);
+  const el=document.getElementById('bp-log');
+  if(!_bpLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu huyết áp</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>HA (mmHg)</th><th>Trạng thái</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _bpLog.map(x=>`<tr><td>${x.d}</td><td><strong>${x.s}/${x.di}</strong></td><td>${bpStatus(x.s,x.di)}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delBp(${x.ts})">✕</span></td></tr>`).join('')+
+    '</tbody></table>';
+}
+
+function buildBpSvg(pts){
+  const W=320,H=110,pad={t:14,r:28,b:24,l:30};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const allV=[...pts.map(p=>p.s),...pts.map(p=>p.di),90,80];
+  const mn=Math.min(...allV)-5, mx=Math.max(...allV)+5;
+  const xp=i=>pad.l+(pts.length<2?iW/2:i/(pts.length-1)*iW);
+  const yp=v=>pad.t+iH-(v-mn)/(mx-mn)*iH;
+  const line=arr=>'<polyline fill="none" stroke="'+arr[1]+'" stroke-width="2" points="'+arr[0].map((v,i)=>xp(i)+','+yp(v)).join(' ')+'"/>';
+  const dots=arr=>arr[0].map((v,i)=>'<circle cx="'+xp(i)+'" cy="'+yp(v)+'" r="3.5" fill="'+arr[1]+'"><title>'+v+'</title></circle>').join('');
+  const ref=(v,col,lbl)=>'<line x1="'+pad.l+'" x2="'+(W-pad.r+4)+'" y1="'+yp(v)+'" y2="'+yp(v)+'" stroke="'+col+'" stroke-width="1" stroke-dasharray="4,3"/><text x="'+(W-pad.r+6)+'" y="'+(yp(v)+3)+'" font-size="8" fill="'+col+'">'+lbl+'</text>';
+  const labels=pts.filter((_,i)=>pts.length<=6||i%Math.ceil(pts.length/6)===0||i===pts.length-1).map(p=>'<text x="'+xp(pts.indexOf(p))+'" y="'+(H-5)+'" font-size="9" text-anchor="middle" fill="#bbb">'+p.d.slice(5)+'</text>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:'+W+'px">'+
+    ref(140,'#e06060','140')+ref(90,'#f0a040','90')+
+    line([pts.map(p=>p.s),'#e06060'])+line([pts.map(p=>p.di),'#5b9bd5'])+
+    dots([pts.map(p=>p.s),'#e06060'])+dots([pts.map(p=>p.di),'#5b9bd5'])+
+    labels+
+    '<text x="6" y="'+(yp(pts[pts.length-1].s)+4)+'" font-size="9" fill="#e06060">TT</text>'+
+    '<text x="6" y="'+(yp(pts[pts.length-1].di)+4)+'" font-size="9" fill="#5b9bd5">TR</text>'+
+    '</svg>';
+}
+
+// ── Weight ────────────────────────────────────────────────
+function addWeight(){
+  const d=document.getElementById('wt-date').value||todayStr();
+  const kg=parseFloat(document.getElementById('wt-kg').value);
+  const n=document.getElementById('wt-note').value.trim();
+  if(!kg||kg<30){alert('Vui lòng nhập cân nặng hợp lệ');return;}
+  _weightLog.unshift({d,kg,n,ts:Date.now()});
+  document.getElementById('wt-kg').value='';
+  document.getElementById('wt-note').value='';
+  renderWeightLog();
+  scheduleSave();
+}
+
+function delWeight(ts){_weightLog=_weightLog.filter(x=>x.ts!==ts);renderWeightLog();scheduleSave();}
+
+function renderWeightLog(){
+  const sorted=[..._weightLog].sort((a,b)=>a.d.localeCompare(b.d));
+  const chartEl=document.getElementById('wt-chart');
+  chartEl.innerHTML=sorted.length<2?'<div class="chart-empty">Cần ít nhất 2 điểm để vẽ biểu đồ</div>':buildWtSvg(sorted);
+  const el=document.getElementById('wt-log');
+  if(!_weightLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu cân nặng</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>Cân nặng</th><th>Tăng từ đầu</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _weightLog.map(x=>{
+      const gain=_hsWstart>0?'+'+(x.kg-_hsWstart).toFixed(1)+' kg':'--';
+      return `<tr><td>${x.d}</td><td><strong>${x.kg} kg</strong></td><td style="color:var(--rose);font-weight:600">${gain}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delWeight(${x.ts})">✕</span></td></tr>`;
+    }).join('')+'</tbody></table>';
+}
+
+function buildWtSvg(pts){
+  const W=320,H=110,pad={t:14,r:14,b:24,l:36};
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  const vals=pts.map(p=>p.kg);
+  let lo=_hsWstart>0&&_hsHeight>0?_hsWstart+getIomBand(_hsWstart/(_hsHeight/100*_hsHeight/100))[0]:null;
+  let hi=_hsWstart>0&&_hsHeight>0?_hsWstart+getIomBand(_hsWstart/(_hsHeight/100*_hsHeight/100))[1]:null;
+  const allV=lo!=null?[...vals,lo,hi]:[...vals];
+  const mn=Math.min(...allV)-1, mx=Math.max(...allV)+1;
+  const xp=i=>pad.l+(pts.length<2?iW/2:i/(pts.length-1)*iW);
+  const yp=v=>pad.t+iH-(v-mn)/(mx-mn)*iH;
+  let band='';
+  if(lo!=null&&hi!=null){
+    const y1=yp(hi),y2=yp(lo);
+    band='<rect x="'+pad.l+'" y="'+y1+'" width="'+iW+'" height="'+(y2-y1)+'" fill="#e8f5e9" opacity=".7"/>';
+  }
+  const labels=pts.filter((_,i)=>pts.length<=6||i%Math.ceil(pts.length/6)===0||i===pts.length-1).map(p=>'<text x="'+xp(pts.indexOf(p))+'" y="'+(H-5)+'" font-size="9" text-anchor="middle" fill="#bbb">'+p.d.slice(5)+'</text>').join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;max-width:'+W+'px">'+band+
+    '<polyline fill="none" stroke="#7aaa6a" stroke-width="2" points="'+pts.map((p,i)=>xp(i)+','+yp(p.kg)).join(' ')+'"/>'+
+    pts.map((p,i)=>'<circle cx="'+xp(i)+'" cy="'+yp(p.kg)+'" r="3.5" fill="#7aaa6a"><title>'+p.kg+' kg</title></circle>').join('')+
+    labels+'</svg>';
+}
+
+// ── Kick count ────────────────────────────────────────────
+function kickStatus(count,mins){
+  if(mins<=120&&count>=10) return '<span class="st-ok">✓ Tốt (≥10 lần/2h)</span>';
+  if(count<10&&mins>=120)  return '<span class="st-alert">⚠ Ít cử động – hỏi bác sĩ</span>';
+  return '<span class="st-warn">△ Đang đếm</span>';
+}
+
+function addKick(){
+  const d=document.getElementById('kk-date').value||todayStr();
+  const count=parseInt(document.getElementById('kk-count').value);
+  const mins=parseInt(document.getElementById('kk-mins').value)||120;
+  const n=document.getElementById('kk-note').value.trim();
+  if(isNaN(count)||count<0){alert('Vui lòng nhập số lần thai máy');return;}
+  _kickLog.unshift({d,count,mins,n,ts:Date.now()});
+  document.getElementById('kk-count').value='';
+  document.getElementById('kk-mins').value='';
+  document.getElementById('kk-note').value='';
+  renderKickLog();
+  scheduleSave();
+}
+
+function delKick(ts){_kickLog=_kickLog.filter(x=>x.ts!==ts);renderKickLog();scheduleSave();}
+
+function renderKickLog(){
+  const el=document.getElementById('kk-log');
+  if(!_kickLog.length){el.innerHTML='<div class="chart-empty">Chưa có dữ liệu thai máy</div>';return;}
+  el.innerHTML='<table class="log-tbl"><thead><tr><th>Ngày</th><th>Số lần</th><th>Thời gian</th><th>Trạng thái</th><th>Ghi chú</th><th></th></tr></thead><tbody>'+
+    _kickLog.map(x=>`<tr><td>${x.d}</td><td><strong>${x.count}</strong></td><td>${x.mins} phút</td><td>${kickStatus(x.count,x.mins)}</td><td style="color:var(--muted);font-size:11px">${x.n||''}</td><td><span class="tbl-del" onclick="delKick(${x.ts})">✕</span></td></tr>`).join('')+'</tbody></table>';
+}
+
+// ── Health date init ──────────────────────────────────────
+(function(){const t=todayStr();['bp-date','wt-date','kk-date'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=t;});})();
 
 // ── Init ──────────────────────────────────────────────────
 (function(){const t=localStorage.getItem('pg_theme');if(t)applyTheme(t);})();
