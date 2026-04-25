@@ -282,7 +282,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .chibi-card{display:flex;flex-direction:column;align-items:center;gap:3px;animation:chibi-pop .45s cubic-bezier(.34,1.56,.64,1) both;}
 .chibi-card:nth-child(2){animation-delay:.08s;}.chibi-card:nth-child(3){animation-delay:.16s;}
 @keyframes chibi-pop{from{opacity:0;transform:scale(.5) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.chibi-av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:white;border:2.5px solid;box-shadow:0 4px 12px rgba(0,0,0,.13);}
+.chibi-av{width:62px;height:62px;border-radius:50%;overflow:hidden;background:white;border:3px solid;box-shadow:0 4px 14px rgba(0,0,0,.15);}
 .chibi-av.c-mom{border-color:#f9a8d4;}.chibi-av.c-dad{border-color:#93c5fd;}.chibi-av.c-baby{border-color:#fde68a;}
 .chibi-name{font-size:10px;font-weight:700;color:var(--deep);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chibi-role{font-size:9px;color:var(--muted);}
@@ -839,7 +839,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 </div>
 
 </div>
-<div class="footer">Thông tin mang tính tham khảo. <strong>Luôn hỏi ý kiến bác sĩ sản phụ khoa</strong> cho tình trạng cá nhân. 🌸</div>
+<div class="footer">Thông tin mang tính tham khảo. <strong>Luôn hỏi ý kiến bác sĩ sản phụ khoa</strong> cho tình trạng cá nhân. 🌸<br><span style="font-size:10px;opacity:.55;letter-spacing:.3px;">made with love · by Shirou</span></div>
 <button class="fab" onclick="scrollToNow()">📍</button>
 
 
@@ -1015,44 +1015,102 @@ function applyTheme(t){
   localStorage.setItem('pg_theme',t);
 }
 function chibiSvg(type){
-  if(type==='mom') return `<svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-<path d="M12 27 Q12 5 30 5 Q48 5 48 27 Q44 9 30 8 Q16 9 12 27Z" fill="#6d28d9"/>
-<path d="M12 26 Q9 40 11 52 Q13 60 18 62" fill="#6d28d9"/><path d="M48 26 Q51 40 49 52 Q47 60 42 62" fill="#6d28d9"/>
-<circle cx="30" cy="26" r="18" fill="#fddbb4"/>
-<path d="M12 26 Q13 9 30 8 Q47 9 48 26" fill="#6d28d9"/>
-<circle cx="23" cy="24" r="3.2" fill="#1e293b"/><circle cx="37" cy="24" r="3.2" fill="#1e293b"/>
-<circle cx="24.3" cy="22.6" r="1.2" fill="white"/><circle cx="38.3" cy="22.6" r="1.2" fill="white"/>
-<circle cx="18" cy="30" r="5.5" fill="#fb7185" opacity=".28"/><circle cx="42" cy="30" r="5.5" fill="#fb7185" opacity=".28"/>
-<path d="M25 34 Q30 39 35 34" stroke="#6d28d9" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-<rect x="24.5" y="42" width="11" height="7" rx="3.5" fill="#fddbb4"/>
-<ellipse cx="30" cy="61" rx="18" ry="14" fill="#f9a8d4"/>
-<ellipse cx="30" cy="67" rx="12" ry="9" fill="#fce7f3"/>
-<ellipse cx="10" cy="57" rx="5" ry="11" fill="#f9a8d4" transform="rotate(-12 10 57)"/>
-<ellipse cx="50" cy="57" rx="5" ry="11" fill="#f9a8d4" transform="rotate(12 50 57)"/>
+  // All use 60×60 viewBox → fills 52×52 circle container cleanly
+  if(type==='mom') return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- hair back (long purple) -->
+<ellipse cx="30" cy="24" rx="21" ry="22" fill="#a855f7"/>
+<ellipse cx="11" cy="38" rx="7" ry="13" fill="#a855f7"/>
+<ellipse cx="49" cy="38" rx="7" ry="13" fill="#a855f7"/>
+<!-- head -->
+<circle cx="30" cy="23" r="19" fill="#ffe4c4"/>
+<!-- hair front band -->
+<path d="M11 21 Q11 5 30 5 Q49 5 49 21 Q44 9 30 8 Q16 9 11 21Z" fill="#a855f7"/>
+<!-- hair bow: right side -->
+<path d="M43 7 L47 3 L50 7 L46 10Z" fill="#f472b6"/>
+<path d="M43 7 L47 11 L50 7 L46 4Z" fill="#ec4899"/>
+<circle cx="46.5" cy="7" r="2.2" fill="#fbbf24"/>
+<!-- eyes: anime style with iris + 2 highlights -->
+<ellipse cx="21" cy="22" rx="5" ry="6" fill="#1a1a2e"/>
+<ellipse cx="21" cy="23" rx="3.5" ry="4.5" fill="#7c3aed"/>
+<circle cx="19" cy="20" r="2.8" fill="white"/>
+<circle cx="23.5" cy="25.5" r="1.4" fill="white" opacity=".55"/>
+<ellipse cx="39" cy="22" rx="5" ry="6" fill="#1a1a2e"/>
+<ellipse cx="39" cy="23" rx="3.5" ry="4.5" fill="#7c3aed"/>
+<circle cx="37" cy="20" r="2.8" fill="white"/>
+<circle cx="41.5" cy="25.5" r="1.4" fill="white" opacity=".55"/>
+<!-- blush -->
+<circle cx="15" cy="28" r="6.5" fill="#fb7185" opacity=".38"/>
+<circle cx="45" cy="28" r="6.5" fill="#fb7185" opacity=".38"/>
+<!-- mouth: cute open smile -->
+<path d="M25 32 Q30 38 35 32" stroke="#a855f7" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<!-- neck + body with bump -->
+<rect x="25" y="40" width="10" height="7" rx="5" fill="#ffe4c4"/>
+<ellipse cx="30" cy="54" rx="18" ry="10" fill="#f9a8d4"/>
+<ellipse cx="30" cy="57" rx="12" ry="7" fill="#fce7f3"/>
 </svg>`;
-  if(type==='dad') return `<svg viewBox="0 0 60 76" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-<path d="M13 25 Q13 6 30 6 Q47 6 47 25 Q44 10 30 9 Q16 10 13 25Z" fill="#374151"/>
-<circle cx="30" cy="24" r="18" fill="#fcd9a4"/>
-<path d="M13 25 Q14 10 30 9 Q46 10 47 25" fill="#374151"/>
-<circle cx="23" cy="22" r="3.2" fill="#1e293b"/><circle cx="37" cy="22" r="3.2" fill="#1e293b"/>
-<circle cx="24.3" cy="20.6" r="1.2" fill="white"/><circle cx="38.3" cy="20.6" r="1.2" fill="white"/>
-<circle cx="18" cy="27" r="5" fill="#fb7185" opacity=".15"/><circle cx="42" cy="27" r="5" fill="#fb7185" opacity=".15"/>
-<path d="M25 31 Q30 36 35 31" stroke="#374151" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-<rect x="24.5" y="40" width="11" height="7" rx="3.5" fill="#fcd9a4"/>
-<ellipse cx="30" cy="58" rx="18" ry="13" fill="#93c5fd"/>
-<ellipse cx="10" cy="54" rx="5" ry="11" fill="#93c5fd" transform="rotate(-12 10 54)"/>
-<ellipse cx="50" cy="54" rx="5" ry="11" fill="#93c5fd" transform="rotate(12 50 54)"/>
+
+  if(type==='dad') return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- hair back -->
+<ellipse cx="30" cy="21" rx="20" ry="18" fill="#374151"/>
+<!-- head -->
+<circle cx="30" cy="23" r="18" fill="#f5c89a"/>
+<!-- hair front -->
+<path d="M12 21 Q12 6 30 6 Q48 6 48 21 Q45 11 30 10 Q15 11 12 21Z" fill="#374151"/>
+<!-- ears -->
+<ellipse cx="12" cy="24" rx="3.5" ry="4.5" fill="#f5c89a"/>
+<ellipse cx="48" cy="24" rx="3.5" ry="4.5" fill="#f5c89a"/>
+<!-- eyes: same anime style, brown iris -->
+<ellipse cx="21" cy="23" rx="5" ry="5.5" fill="#1a1a2e"/>
+<ellipse cx="21" cy="24" rx="3.5" ry="4" fill="#a16207"/>
+<circle cx="19" cy="21" r="2.6" fill="white"/>
+<circle cx="23.5" cy="26" r="1.3" fill="white" opacity=".55"/>
+<ellipse cx="39" cy="23" rx="5" ry="5.5" fill="#1a1a2e"/>
+<ellipse cx="39" cy="24" rx="3.5" ry="4" fill="#a16207"/>
+<circle cx="37" cy="21" r="2.6" fill="white"/>
+<circle cx="41.5" cy="26" r="1.3" fill="white" opacity=".55"/>
+<!-- subtle blush -->
+<circle cx="15" cy="28" r="5.5" fill="#fb7185" opacity=".18"/>
+<circle cx="45" cy="28" r="5.5" fill="#fb7185" opacity=".18"/>
+<!-- smile -->
+<path d="M25 31 Q30 36 35 31" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+<!-- neck + body -->
+<rect x="25" y="39" width="10" height="7" rx="5" fill="#f5c89a"/>
+<ellipse cx="30" cy="53" rx="18" ry="10" fill="#60a5fa"/>
+<!-- collar V -->
+<path d="M23 44 L30 50 L37 44" fill="none" stroke="white" stroke-width="1.5" opacity=".6" stroke-linejoin="round"/>
 </svg>`;
-  return `<svg viewBox="0 0 50 66" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-<ellipse cx="25" cy="6" rx="12" ry="5" fill="#fbbf24"/>
-<path d="M8 23 Q8 4 25 4 Q42 4 42 23" fill="#fde68a"/>
-<circle cx="25" cy="24" r="17" fill="#ffe9c4"/>
-<circle cx="19" cy="23" r="2.8" fill="#1e293b"/><circle cx="31" cy="23" r="2.8" fill="#1e293b"/>
-<circle cx="20" cy="21.6" r="1.1" fill="white"/><circle cx="32" cy="21.6" r="1.1" fill="white"/>
-<circle cx="13" cy="28" r="6.5" fill="#fb7185" opacity=".32"/><circle cx="37" cy="28" r="6.5" fill="#fb7185" opacity=".32"/>
-<path d="M21 31 Q25 36 29 31" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-<ellipse cx="25" cy="52" rx="15" ry="12" fill="#fef9c3"/>
-<circle cx="9" cy="50" r="5" fill="#ffe9c4"/><circle cx="41" cy="50" r="5" fill="#ffe9c4"/>
+
+  // baby
+  return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+<!-- chubby cheek extensions -->
+<ellipse cx="7" cy="30" rx="6" ry="7" fill="#fde8c8"/>
+<ellipse cx="53" cy="30" rx="6" ry="7" fill="#fde8c8"/>
+<!-- head: HUGE, fills viewbox -->
+<circle cx="30" cy="27" r="23" fill="#fde8c8"/>
+<!-- wispy hair: 3 strands -->
+<path d="M22 5 Q24 1 27 5" stroke="#fbbf24" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<path d="M30 3 Q30 0 32 4" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M36 5 Q38 1 40 5" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
+<!-- eyes: wide-set, big for baby -->
+<ellipse cx="19" cy="27" rx="5.5" ry="6.5" fill="#1a1a2e"/>
+<ellipse cx="19" cy="28" rx="4" ry="5" fill="#1e3a5f"/>
+<circle cx="16.5" cy="24.5" r="3" fill="white"/>
+<circle cx="21.5" cy="30" r="1.5" fill="white" opacity=".55"/>
+<ellipse cx="41" cy="27" rx="5.5" ry="6.5" fill="#1a1a2e"/>
+<ellipse cx="41" cy="28" rx="4" ry="5" fill="#1e3a5f"/>
+<circle cx="38.5" cy="24.5" r="3" fill="white"/>
+<circle cx="43.5" cy="30" r="1.5" fill="white" opacity=".55"/>
+<!-- mega blush -->
+<circle cx="10" cy="33" r="8.5" fill="#fb7185" opacity=".38"/>
+<circle cx="50" cy="33" r="8.5" fill="#fb7185" opacity=".38"/>
+<!-- tiny sweet smile -->
+<path d="M24 37 Q30 44 36 37" stroke="#f472b6" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<!-- swaddle body -->
+<ellipse cx="30" cy="55" rx="18" ry="9" fill="#fef9c3"/>
+<path d="M14 52 Q30 48 46 52" stroke="#fde68a" stroke-width="2" fill="none"/>
+<!-- tiny fists -->
+<circle cx="11" cy="50" r="5.5" fill="#fde8c8"/>
+<circle cx="49" cy="50" r="5.5" fill="#fde8c8"/>
 </svg>`;
 }
 
