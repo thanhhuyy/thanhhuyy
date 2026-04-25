@@ -263,22 +263,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .hd-fl{position:absolute;font-size:16px;opacity:.35;animation:hd-float 4s ease-in-out infinite;}
 .f1{top:8%;left:4%;animation-delay:0s;font-size:13px;}.f2{top:18%;right:6%;animation-delay:.7s;font-size:11px;}.f3{bottom:32%;left:3%;animation-delay:1.4s;font-size:14px;}.f4{bottom:15%;right:5%;animation-delay:2.1s;font-size:12px;}.f5{top:45%;left:48%;animation-delay:2.8s;font-size:10px;}
 @keyframes hd-float{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-7px) rotate(5deg)}}
-.hero-top{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
-.hero-ring-wrap{position:relative;width:78px;height:78px;flex-shrink:0;}
+/* Hero: single-column centered */
+.hero{text-align:center;}
+.hero-ring-wrap{position:relative;width:78px;height:78px;margin:0 auto 10px;}
 .wr-svg{width:78px;height:78px;transform:rotate(-90deg);}
 .wr-bg{fill:none;stroke:rgba(0,0,0,.07);stroke-width:7;}
 .wr-track{fill:none;stroke:var(--rose);stroke-width:7;stroke-linecap:round;stroke-dasharray:213.6;stroke-dashoffset:160;transition:stroke-dashoffset 1s ease;}
 .hero-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .hrl-week{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--deep);line-height:1;}
 .hrl-sub{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.6px;margin-top:1px;}
-.hero-text-col{text-align:left;max-width:220px;}
-.hero-text-col h1{font-family:'Playfair Display',serif;font-size:clamp(17px,4vw,24px);color:var(--deep);line-height:1.25;margin-bottom:3px;}
-.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--rose);min-height:15px;margin-bottom:6px;}
-.hero-meta-row{display:flex;gap:5px;flex-wrap:wrap;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(17px,4vw,24px);color:var(--deep);line-height:1.25;margin-bottom:3px;}
+.hero-baby-tag{font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:var(--rose);min-height:15px;margin-bottom:8px;}
+.hero-meta-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
 .hm-chip{font-size:10.5px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,.65);color:var(--text);border:1px solid rgba(0,0,0,.06);display:inline-flex;gap:3px;align-items:center;white-space:nowrap;}
 .hm-due{background:var(--rose);color:white;border-color:transparent;}
 .hm-cnt{background:var(--deep);color:white;border-color:transparent;}
-.hero-chibi-row{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap;min-height:44px;}
+/* Chibi family row */
+.hero-chibi-row{display:flex;align-items:flex-end;justify-content:center;gap:14px;flex-wrap:wrap;}
 .chibi-card{display:flex;flex-direction:column;align-items:center;gap:3px;animation:chibi-pop .45s cubic-bezier(.34,1.56,.64,1) both;}
 .chibi-card:nth-child(2){animation-delay:.08s;}.chibi-card:nth-child(3){animation-delay:.16s;}
 @keyframes chibi-pop{from{opacity:0;transform:scale(.5) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
@@ -287,11 +288,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .chibi-name{font-size:10px;font-weight:700;color:var(--deep);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chibi-role{font-size:9px;color:var(--muted);}
 .chibi-baby .chibi-av{width:48px;height:48px;border-width:2.5px;}
-.chibi-baby{margin-bottom:0;position:relative;top:6px;}
-.hero-chibi-row{position:relative;}
-.hero-chibi-row::before{content:'💕';position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:11px;opacity:.6;pointer-events:none;}
-.hero-add-btn{background:rgba(255,255,255,.7);border:2px dashed var(--rose);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:16px;color:var(--rose);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;margin-bottom:6px;}
-.hero-add-btn:hover{background:var(--rose);color:white;}
+.chibi-baby{position:relative;top:6px;}
+/* Corner edit button */
+.hero-edit-corner{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.72);border:1.5px solid rgba(212,133,106,.3);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:12px;color:var(--rose);display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;backdrop-filter:blur(4px);line-height:1;}
+.hero-edit-corner:hover{background:var(--rose);color:white;border-color:transparent;}
 /* Banner size chip */
 .cb-size{display:inline-block;background:rgba(255,255,255,.2);border-radius:8px;padding:1px 7px;font-size:10.5px;margin-top:3px;}
 
@@ -378,26 +378,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
     <span class="hd-fl f1">🌸</span><span class="hd-fl f2">💕</span>
     <span class="hd-fl f3">⭐</span><span class="hd-fl f4">🌼</span><span class="hd-fl f5">✨</span>
   </div>
-  <div class="hero-top">
-    <div class="hero-ring-wrap">
-      <svg class="wr-svg" viewBox="0 0 80 80">
-        <circle class="wr-bg" cx="40" cy="40" r="34"/>
-        <circle class="wr-track" id="wr-fill" cx="40" cy="40" r="34"/>
-      </svg>
-      <div class="hero-ring-label">
-        <span class="hrl-week" id="hero-ring-week">10</span>
-        <span class="hrl-sub">tuần</span>
-      </div>
+  <button class="hero-edit-corner" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>
+  <div class="hero-ring-wrap">
+    <svg class="wr-svg" viewBox="0 0 80 80">
+      <circle class="wr-bg" cx="40" cy="40" r="34"/>
+      <circle class="wr-track" id="wr-fill" cx="40" cy="40" r="34"/>
+    </svg>
+    <div class="hero-ring-label">
+      <span class="hrl-week" id="hero-ring-week">10</span>
+      <span class="hrl-sub">tuần</span>
     </div>
-    <div class="hero-text-col">
-      <h1 id="hero-title">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
-      <div class="hero-baby-tag" id="hero-baby-tag"></div>
-      <div class="hero-meta-row">
-        <span class="hm-chip">📅 <strong id="today-display"></strong></span>
-        <span class="hm-chip hm-due">🍼 <strong id="due-display"></strong></span>
-        <span class="hm-chip hm-cnt">⏳ <strong id="days-left-hero"></strong></span>
-      </div>
-    </div>
+  </div>
+  <h1 id="hero-title">Lộ Trình Thai Kỳ<br><em>Theo Từng Tuần</em></h1>
+  <div class="hero-baby-tag" id="hero-baby-tag"></div>
+  <div class="hero-meta-row">
+    <span class="hm-chip">📅 <strong id="today-display"></strong></span>
+    <span class="hm-chip hm-due">🍼 <strong id="due-display"></strong></span>
+    <span class="hm-chip hm-cnt">⏳ <strong id="days-left-hero"></strong></span>
   </div>
   <div class="hero-chibi-row" id="hero-family"></div>
 </div>
@@ -1153,7 +1150,6 @@ function updateHero(){
   if(momName) html+=chibiCard('mom',momName,'Mẹ');
   if(babyNick) html+=chibiCard('baby',babyNick,'Bé yêu');
   if(dadName)  html+=chibiCard('dad',dadName,'Bố');
-  html+=`<button class="hero-add-btn" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>`;
   fam.innerHTML=html;
 }
 
