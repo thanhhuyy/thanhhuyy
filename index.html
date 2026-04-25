@@ -286,6 +286,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .chibi-av.c-mom{border-color:#f9a8d4;}.chibi-av.c-dad{border-color:#93c5fd;}.chibi-av.c-baby{border-color:#fde68a;}
 .chibi-name{font-size:10px;font-weight:700;color:var(--deep);max-width:62px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .chibi-role{font-size:9px;color:var(--muted);}
+.chibi-baby .chibi-av{width:48px;height:48px;border-width:2.5px;}
+.chibi-baby{margin-bottom:0;position:relative;top:6px;}
+.hero-chibi-row{position:relative;}
+.hero-chibi-row::before{content:'💕';position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:11px;opacity:.6;pointer-events:none;}
 .hero-add-btn{background:rgba(255,255,255,.7);border:2px dashed var(--rose);border-radius:50%;width:44px;height:44px;cursor:pointer;font-size:16px;color:var(--rose);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;margin-bottom:6px;}
 .hero-add-btn:hover{background:var(--rose);color:white;}
 /* Banner size chip */
@@ -1115,7 +1119,8 @@ function chibiSvg(type){
 }
 
 function chibiCard(type,name,role){
-  return `<div class="chibi-card"><div class="chibi-av c-${type}">${chibiSvg(type)}</div><div class="chibi-name">${name}</div><div class="chibi-role">${role}</div></div>`;
+  const small=type==='baby'?' chibi-baby':'';
+  return `<div class="chibi-card${small}"><div class="chibi-av c-${type}">${chibiSvg(type)}</div><div class="chibi-name">${name}</div><div class="chibi-role">${role}</div></div>`;
 }
 
 function updateRing(w){
@@ -1146,8 +1151,8 @@ function updateHero(){
   // Chibi row
   let html='';
   if(momName) html+=chibiCard('mom',momName,'Mẹ');
-  if(dadName)  html+=chibiCard('dad',dadName,'Bố');
   if(babyNick) html+=chibiCard('baby',babyNick,'Bé yêu');
+  if(dadName)  html+=chibiCard('dad',dadName,'Bố');
   html+=`<button class="hero-add-btn" onclick="openProfile()" title="Chỉnh sửa hồ sơ">✏️</button>`;
   fam.innerHTML=html;
 }
